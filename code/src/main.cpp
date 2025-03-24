@@ -1,9 +1,10 @@
 #include<iostream>
 
+#include "../includes/Room.h"
 
 int main() {
     // Create a room
-    ROOM room(10, "single", 99.99);
+    Room room(10, "single", 99.99);
 
     std::cout << room << std::endl;
 
