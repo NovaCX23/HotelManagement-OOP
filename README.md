@@ -4,9 +4,13 @@
 The goal of this project is to simulate the core hotel operations, providing the following functionalities:
 
 1)Room Management – Add, remove, update, and search for rooms (with details like room number, type, price, and availability).
+
 2)Guest Management – Register and view guest details.
+
 3)Booking System – Create, modify, and cancel reservations with automatic room availability checks.
+
 4)Reporting – Display lists of available/occupied rooms and booking history per guest.
+
 5)...?
 
 
