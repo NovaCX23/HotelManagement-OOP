@@ -1,25 +1,14 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+# Hotel Management System
 
-### Folosiți template-ul corespunzător grupei voastre!
+### Project Description:
+The goal of this project is to simulate the core hotel operations, providing the following functionalities:
 
-Laborant   | Link template
------------|--------------
- Dragoș B  | https://github.com/Ionnier/oop-template
- Tiberiu M | https://github.com/MaximTiberiu/oop-template
- Marius MC | https://github.com/mcmarius/oop-template
+1)Room Management – Add, remove, update, and search for rooms (with details like room number, type, price, and availability).
+2)Guest Management – Register and view guest details.
+3)Booking System – Create, modify, and cancel reservations with automatic room availability checks.
+4)Reporting – Display lists of available/occupied rooms and booking history per guest.
+5)...?
 
-
-### Important!
-
-Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar în folder-ul `generated`.
-Codul generat pus "ca să fie"/pe care nu îl înțelegeți se punctează doar pentru puncte bonus, doar în contextul
-în care oferă funcționalități ajutătoare și doar dacă are sens.
-
-O cerință nu se consideră îndeplinită dacă este realizată doar prin cod generat.
-
-- **Fără cod de umplutură/fără sens!**
-- **Fără variabile globale!**
-- **Fără atribute publice!**
 
 ### Tema 0
 
