@@ -42,7 +42,7 @@ std::ostream& operator<<(std::ostream& os, const Booking& booking) {
 
 // Destructor
 Booking::~Booking() {
-    std::cout << "Booking for " << guest.getName() << " cancelled\n";
+    //std::cout << "Booking for " << guest.getName() << " cancelled\n";
 }
 
 
