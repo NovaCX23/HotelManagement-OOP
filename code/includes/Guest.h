@@ -12,7 +12,7 @@ public:
 
     //Getters
     [[nodiscard]] const std::string& getName() const { return name; }
-    const std::string& getId() const { return id; }
+    [[nodiscard]] const std::string& getId() const { return id; }
 
     [[nodiscard]] bool isValidId() const;
 

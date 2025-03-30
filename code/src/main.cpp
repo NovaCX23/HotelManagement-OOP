@@ -17,6 +17,7 @@ int main() {
 
     // Test Guest
     Guest guest1("Ana", "APP123");
+    std::cout << "Ana'id is: " << guest1.getId() << std::endl;
     Guest guest2("Alex", "IV456"); // ID invalid
     Guest guest3("Ion", "ION012");
     Guest guest4("Matei", "MAT101");
