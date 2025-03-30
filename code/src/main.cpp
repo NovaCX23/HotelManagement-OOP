@@ -17,16 +17,19 @@ int main() {
 
     // Test Guest
     Guest guest1("Ana", "APP123");
-    Guest guest2("Ion", "IV456"); // ID invalid
-    Guest guest3("Alex", "ALX012");
+    Guest guest2("Alex", "IV456"); // ID invalid
+    Guest guest3("Ion", "ION012");
+    Guest guest4("Matei", "MAT101");
+
 
     std::cout << guest1 << "\n";
-    std::cout << "ID valid? " << guest1.isValidId() << "\n"; // true
+    std::cout << "ID valid? " << (guest1.isValidId() ? "Yes" : "No") << "\n"; // true
 
     std::cout << guest2 << "\n";
-    std::cout << "ID valid? " << guest2.isValidId() << "\n"; // false
+    std::cout << "ID valid? " << (guest2.isValidId() ? "Yes" : "No")<< "\n"; // false
 
     // Test Booking
+    /*
     Booking booking1(room1, guest1, "2023-10-01", 3);
     std::cout << booking1 << "\n";
 
@@ -35,26 +38,26 @@ int main() {
 
     std::cout << "Total price:  " << booking1.getTotalPrice() << "\n";
     std::cout << "Is active?  " << booking1.isActive("2023-10-02") << "\n";
-
+    */
 
     // Test Hotel
     Hotel hotel;
     hotel.addBooking(Booking(room1, guest1, "2024-10-02", 3));
-    hotel.addBooking(Booking(room2, guest2, "2024-10-05", 2));
+    hotel.addBooking(Booking(room2, guest2, "2024-10-06", 2));
+    std::cout << (hotel.isRoomAvailable(101, "2024-10-05") ? "Yes" : "No") << std::endl;
+    hotel.addBooking(Booking(room1, guest4, "2024-10-05", 3));
 
     hotel.displayAllBookings();
 
-    std::cout << "=== Disponibility ===\n";
+    std::cout << "=== Availability ===\n";
     std::cout << "Room 102 available on 2024-10-02? "
               << (hotel.isRoomAvailable(101, "2024-10-02") ? "Yes" : "No") << "\n";
-    std::cout << "Room 102 available on 2024-10-06? "
-              << (hotel.isRoomAvailable(102, "2024-10-06") ? "Yes" : "No") << "\n";
+    std::cout << "Room 102 available on 2024-10-10? "
+              << (hotel.isRoomAvailable(102, "2024-10-10") ? "Yes" : "No") << "\n";
 
 
     std::cout << "=== Cancel reservation ===\n";
-    if (hotel.cancelBooking(101)) {
-        //std::cout << "Rezervarea pentru camera 101 a fost anulată.\n";
-    }
+    hotel.cancelBooking(101);
 
     std::cout << "=== Remaining reservations ===\n";
     hotel.displayAllBookings();

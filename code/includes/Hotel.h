@@ -9,7 +9,7 @@ class Hotel {
 public:
     void addBooking(const Booking& booking);
     bool cancelBooking(int roomNumber);
-    bool isRoomAvailable(int roomNumber, const std::string& date) const;
+    [[nodiscard]] bool isRoomAvailable(int roomNumber, const std::string& date) const;
     void displayAllBookings() const;
 };
 

@@ -11,11 +11,11 @@ public:
     Guest(const std::string& name, const std::string& id);
 
     //Getters
-    std::string getName() const { return name;}
-    std::string getId() const { return id;}
+    [[nodiscard]] std::string getName() const { return name;}
+    [[nodiscard]] std::string getId() const { return id;}
 
 
-    bool isValidId() const;
+    [[nodiscard]] bool isValidId() const;
 
     // Operators
     friend std::ostream& operator<<(std::ostream& os, const Guest& guest);

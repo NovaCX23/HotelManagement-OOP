@@ -19,7 +19,7 @@ bool Hotel::cancelBooking(int roomNumber) {
 }
 
 bool Hotel::isRoomAvailable(int roomNumber, const std::string& date) const {
-    for(auto i = bookings.begin(); i != bookings.end(); ++i) {
+    for (auto i = bookings.begin(); i != bookings.end(); ++i) {
         const Booking& booking = *i;
         if (booking.getRoom().getNumber() == roomNumber && booking.isActive(date))
             return false;

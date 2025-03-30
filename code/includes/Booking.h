@@ -16,14 +16,14 @@ public:
     Booking(const Booking& other); // copy constructor
 
     // Getters
-    const Room& getRoom() const { return room; }
-    const Guest& getGuest() const { return guest; }
-    std::string getCheckIn() const { return checkIn; }
-    int getNights() const { return nights; }
+    [[nodiscard]] const Room& getRoom() const { return room; }
+    [[nodiscard]] const Guest& getGuest() const { return guest; }
+    [[nodiscard]] std::string getCheckIn() const { return checkIn; }
+    [[nodiscard]] int getNights() const { return nights; }
 
     // Public Functions
-    double getTotalPrice() const;
-    bool isActive(const std::string& currentDate) const;
+    [[nodiscard]] double getTotalPrice() const;
+    [[nodiscard]] bool isActive(const std::string& currentDate) const;
 
     // Operators
     Booking& operator=(const Booking& other);
