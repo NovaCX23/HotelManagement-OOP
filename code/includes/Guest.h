@@ -11,9 +11,8 @@ public:
     Guest(const std::string& name, const std::string& id);
 
     //Getters
-    [[nodiscard]] std::string getName() const { return name;}
-    [[nodiscard]] std::string getId() const { return id;}
-
+    [[nodiscard]] const std::string& getName() const { return name; }
+    [[nodiscard]] const std::string& getId() const { return id; }
 
     [[nodiscard]] bool isValidId() const;
 
