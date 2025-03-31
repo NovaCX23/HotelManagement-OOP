@@ -48,6 +48,22 @@ int main() {
     std::cout << (hotel.isRoomAvailable(101, "2024-10-05") ? "Yes" : "No") << std::endl;
     hotel.addBooking(Booking(room1, guest4, "2024-10-05", 3));
 
+    std::cout << "------Prints for git tests:------\n";
+    Guest guest5("John", "JFV123");
+    Booking booking(room1, guest5, "2025-04-01", 3);
+
+    // Folosește toți getterii într-un mod "util" (sau doar pentru afișare)
+    std::cout << "--- Booking Details ---\n";
+    std::cout << "Guest: " << booking.getGuest().getName() << "\n";
+    std::cout << "Check-in: " << booking.getCheckIn() << "\n";
+    std::cout << "Nights: " << booking.getNights() << "\n";
+    std::cout << "Total Price: " << booking.getTotalPrice() << "\n";
+
+    // Verifică dacă rezervarea este activă
+    std::string currentDate = "2025-04-01";
+    std::cout << "Is booking active on " << currentDate << "? "
+              << (booking.isActive(currentDate) ? "Yes" : "No") << "\n";
+
     hotel.displayAllBookings();
 
     std::cout << "=== Availability ===\n";
