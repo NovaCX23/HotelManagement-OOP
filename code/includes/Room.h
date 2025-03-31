@@ -14,7 +14,7 @@ public:
 
     // Getters
     [[nodiscard]] int getNumber() const { return number; }
-    [[nodiscard]] std::string getType() const { return type; }
+    [[nodiscard]] const std::string& getType() const { return type; }
     [[nodiscard]] double getPrice() const { return price; }
 
     // Operators

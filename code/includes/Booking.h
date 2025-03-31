@@ -18,7 +18,7 @@ public:
     // Getters
     [[nodiscard]] const Room& getRoom() const { return room; }
     [[nodiscard]] const Guest& getGuest() const { return guest; }
-    [[nodiscard]] std::string getCheckIn() const { return checkIn; }
+    [[nodiscard]] const std::string& getCheckIn() const { return checkIn; }
     [[nodiscard]] int getNights() const { return nights; }
 
     // Public Functions
