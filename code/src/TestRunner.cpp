@@ -91,23 +91,22 @@ void TestRunner::RunInteractiveMenu(Hotel& hotel) {
                     break;
                 }
 
+                // Room information
+                std::cout << "Enter room number, category and price: ";
+                std::cin >> roomNumber >> roomType >> price;
+
+                // Check-in details
                 std::cout << "Enter check-in date (YYYY-MM-DD) and number of nights: ";
                 std::cin >> checkInDate >> nights;
-                // TODO: verify if the room is available
+
+                // Check availability
                 if (!hotel.isRoomAvailable(roomNumber, checkInDate)) {
                     std::cout << "Room unavailable. Check availability\n";
                     break;
                 }
 
-                // Room information
-                std::cout << "Enter room number, category and price: ";
-                std::cin >> roomNumber >> roomType >> price;
-
                 Room room(roomNumber, roomType, price);
-
-                // Create booking
                 hotel.addBooking(Booking(room, guest, checkInDate, nights));
-
                 break;
             }
             case 2: { // Cancel Booking
@@ -118,13 +117,15 @@ void TestRunner::RunInteractiveMenu(Hotel& hotel) {
                 break;
             }
             case 3: { // Check Room Availability
+                //TODO: Instead of saying if room is available it would be better if this
+                // was checking when the room was available after a certain date
                 int roomNumber;
                 std::string date;
                 std::cout << "Enter room number and date (YYYY-MM-DD) to check availability: ";
                 std::cin >> roomNumber >> date;
 
-                std::cout << "Room " << roomNumber << " availability on " << date << ": "
-                          << (hotel.isRoomAvailable(roomNumber, date) ? "Yes" : "No") << "\n";
+                std::cout << "Room " << roomNumber << " availability on " << date << ":\n";
+                std::cout << (hotel.isRoomAvailable(roomNumber, date) ? "Yes" : "No") << "\n";
                 break;
             }
             case 4: { // Display All Bookings
