@@ -5,6 +5,7 @@
 #include "../includes/Guest.h"
 #include "../includes/Booking.h"
 
+/*
 void TestRunner::RunTestsFromFile(const std::string& filename, Hotel& hotel) {
     std::ifstream fin(filename);
     if (!fin.is_open()) {
@@ -58,6 +59,7 @@ void TestRunner::RunTestsFromFile(const std::string& filename, Hotel& hotel) {
         }
     }
 }
+*/
 
 void TestRunner::RunInteractiveMenu(Hotel& hotel) {
     std::cout << "\n--- Hotel Management System ---\n";
