@@ -5,6 +5,16 @@
 Guest::Guest(const std::string& name, const std::string& id)
     : name(name), id(id) {}
 
+// Getters
+const std::string& Guest::getName() const {
+    return name;
+}
+
+const std::string& Guest::getId() const {
+    return id;
+}
+
+
 // Validare ID
 bool Guest::isValidId() const {
     if (id.length() != 6) return false;

@@ -12,6 +12,23 @@ Booking::Booking(const Booking& other)
     //std::cout << "Booking copied\n";
 }
 
+// Getters
+const Guest& Booking::getGuest() const {
+    return guest;
+}
+
+const std::string& Booking::getCheckIn() const {
+    return checkIn;
+}
+
+int Booking::getNights() const {
+    return nights;
+}
+const Room& Booking::getRoom() const {
+    return room;
+}
+
+
 // Public functions
 double Booking::getTotalPrice() const {
     return room.getPrice() * nights;
@@ -84,8 +101,6 @@ std::ostream& operator<<(std::ostream& os, const Booking& booking) {
 }
 
 // Destructor
-Booking::~Booking() {
-    //std::cout << "Booking for " << guest.getName() << " cancelled\n";
-}
+Booking::~Booking() = default;
 
 

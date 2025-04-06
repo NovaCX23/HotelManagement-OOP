@@ -16,10 +16,10 @@ public:
     Booking(const Booking& other); // copy constructor
 
     // Getters
-    [[nodiscard]] const Room& getRoom() const { return room; }
-    [[nodiscard]] const Guest& getGuest() const { return guest; }
-    [[nodiscard]] const std::string& getCheckIn() const { return checkIn; }
-    [[nodiscard]] int getNights() const { return nights; }
+    [[nodiscard]] const Room& getRoom() const;
+    [[nodiscard]] const Guest& getGuest() const;
+    [[nodiscard]] const std::string& getCheckIn() const;
+    [[nodiscard]] int getNights() const;
 
     // Public Functions
     [[nodiscard]] double getTotalPrice() const;

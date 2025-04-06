@@ -13,9 +13,9 @@ public:
     Room(int number, const std::string& type, double price);
 
     // Getters
-    [[nodiscard]] int getNumber() const { return number; }
-    [[nodiscard]] const std::string& getType() const { return type; }
-    [[nodiscard]] double getPrice() const { return price; }
+    [[nodiscard]] int getNumber() const;
+    [[nodiscard]] const std::string& getType() const;
+    [[nodiscard]] double getPrice() const;
 
     // Operators
     friend std::ostream& operator<<(std::ostream& os, const Room& room);
