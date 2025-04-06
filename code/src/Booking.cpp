@@ -84,13 +84,15 @@ bool Booking::isActive(const std::string& currentDate) const {
 // Operator
 Booking& Booking::operator=(const Booking& other) {
     if (this != &other) {  // Verifică auto-atribuire
-        room = other.room;
-        guest = other.guest;
-        checkIn = other.checkIn;
-        nights = other.nights;
+        // Folosind getter-ele
+        room = other.getRoom();
+        guest = other.getGuest();
+        checkIn = other.getCheckIn();
+        nights = other.getNights();
     }
-    return *this;
+    return *this;  // Returnează obiectul curent
 }
+
 std::ostream& operator<<(std::ostream& os, const Booking& booking) {
     os << "Booking:\n"
        << "  Guest: " << booking.guest << "\n"
