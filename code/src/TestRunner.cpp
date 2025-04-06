@@ -70,6 +70,10 @@ void TestRunner::RunInteractiveMenu(Hotel& hotel) {
         std::cout << "Select an option(number): ";
 
         int choice;
+        if (!(std::cin >> choice)) {
+            std::cout << "Invalid input or end of input. Exiting...\n";
+            return;
+        }
         std::cin >> choice;
 
         switch (choice) {
