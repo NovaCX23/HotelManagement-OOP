@@ -31,7 +31,11 @@ const Room& Booking::getRoom() const {
 
 // Public functions
 double Booking::getTotalPrice() const {
-    return room.getPrice() * nights;
+    double price =  room.getPrice() * nights;
+    if (room.getType() == "VIP") {
+        price *= 0.9; // Aplică reducere de 10% pentru camere VIP
+    }
+    return price;
 }
 
 bool Booking::isActive(const std::string& currentDate) const {

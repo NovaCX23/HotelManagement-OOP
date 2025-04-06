@@ -29,6 +29,6 @@ bool Guest::isValidId() const {
 
 // Operators
 std::ostream& operator<<(std::ostream& os, const Guest& guest) {
-    os << guest.name << " (ID: " << guest.id << ")";
+    os << guest.getName() << " (ID: " << guest.getId() << ")";
     return os;
 }
