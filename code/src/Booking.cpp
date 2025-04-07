@@ -28,7 +28,6 @@ const Room& Booking::getRoom() const {
     return room;
 }
 
-
 // Public functions
 double Booking::getTotalPrice() const {
     double price =  room.getPrice() * nights;
@@ -37,11 +36,13 @@ double Booking::getTotalPrice() const {
     }
     return price;
 }
-
 bool Booking::isActive(const std::string& currentDate) const {
-    // format "YYYY-MM-DD"
     if (currentDate == checkIn) return true;
+    std::string checkOutDate = getCheckout();
 
+    return (currentDate > checkIn) && (currentDate < checkOutDate);
+}
+std::string Booking::getCheckout() const {
     // extragem datele din string
     int year = std::stoi(checkIn.substr(0,4));
     int month = std::stoi(checkIn.substr(5, 2));
@@ -82,7 +83,7 @@ bool Booking::isActive(const std::string& currentDate) const {
     (month < 10 ? "0" : "") + std::to_string(month) + "-" +
     (day < 10 ? "0" : "") + std::to_string(day);
 
-    return (currentDate > checkIn) && (currentDate < checkOutDate);
+    return checkOutDate;
 }
 
 // Operator
@@ -102,6 +103,7 @@ std::ostream& operator<<(std::ostream& os, const Booking& booking) {
        << "  Guest: " << booking.guest << "\n"
        << "  Room: " << booking.room << "\n"
        << "  Check-in: " << booking.checkIn << " for " << booking.nights << " nights\n"
+       << "  Check-out: " << booking.getCheckout() << "\n"
        << "  Total: $" << booking.getTotalPrice();
     return os;
 }

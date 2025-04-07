@@ -76,7 +76,6 @@ void TestRunner::RunInteractiveMenu(Hotel& hotel) {
             std::cout << "Invalid input or end of input. Exiting...\n";
             return;
         }
-        std::cin >> choice;
 
         switch (choice) {
             case 1: { // Add booking
@@ -123,15 +122,16 @@ void TestRunner::RunInteractiveMenu(Hotel& hotel) {
                 break;
             }
             case 3: { // Check Room Availability
-                //TODO: Instead of saying if room is available it would be better if this
-                // was checking when the room was available after a certain date
-                int roomNumber;
+                // TODO: de rezolvat cu aparitia dummy-urilor in terminal
+                // TODO: + sa nu mi gaseasca un interval mai devreme decat cel pe care i-l dau eu
+                int roomNumber, nights;
                 std::string date;
-                std::cout << "Enter room number and date (YYYY-MM-DD) to check availability: ";
-                std::cin >> roomNumber >> date;
+                std::cout << "Enter room number, date (YYYY-MM-DD) and nights to check availability: ";
+                std::cin >> roomNumber >> date >> nights;
 
-                std::cout << "Room " << roomNumber << " availability on " << date << ":\n";
-                std::cout << (hotel.isRoomAvailable(roomNumber, date) ? "Yes" : "No") << "\n";
+                auto nextPeriod = hotel.findNextAvailablePeriod(roomNumber, date, nights);
+                std::cout << "Room " << roomNumber << " is available from: "
+                          << nextPeriod.first << " to " << nextPeriod.second << "\n";
                 break;
             }
             case 4: { // Display All Bookings

@@ -23,6 +23,7 @@ public:
 
     // Public Functions
     [[nodiscard]] double getTotalPrice() const;
+    [[nodiscard]] std::string getCheckout() const;
     [[nodiscard]] bool isActive(const std::string& currentDate) const;
 
     // Operators
