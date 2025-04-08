@@ -1,5 +1,6 @@
 #include "../includes/Hotel.h"
 #include<iostream>
+#include <algorithm>
 
 void Hotel::addBooking(const Booking &booking) {
     bookings.push_back(booking);
@@ -19,8 +20,7 @@ bool Hotel::cancelBooking(int roomNumber) {
 }
 
 bool Hotel::isRoomAvailable(int roomNumber, const std::string& date) const {
-    for (auto i = bookings.begin(); i != bookings.end(); ++i) {
-        const Booking& booking = *i;
+    for (const auto & booking : bookings) {
         if (booking.getRoom().getNumber() == roomNumber && booking.isActive(date))
             return false;
     }
