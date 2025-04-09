@@ -5,62 +5,6 @@
 #include "../includes/Guest.h"
 #include "../includes/Booking.h"
 
-/*
-void TestRunner::RunTestsFromFile(const std::string& filename, Hotel& hotel) {
-    std::ifstream fin(filename);
-    if (!fin.is_open()) {
-        std::cerr << "Error: Could not open file " << filename << "\n";
-        return;
-    }
-    std::cout << "File " << filename << " opened successfully.\n";
-    int option;
-    while (fin >> option) {
-        switch (option) {
-            case 1: { // Add booking
-                int roomNumber, nights;
-                double price;
-                std::string guestName, roomType, guestId, checkInDate;
-                fin >> roomNumber >> roomType >> price >> guestName >> guestId >> checkInDate >> nights;
-
-                Room room(roomNumber, roomType, price);
-                Guest guest(guestName, guestId);
-
-                if (guest.isValidId()) {
-                    hotel.addBooking(Booking(room, guest, checkInDate, nights));
-                }
-                else { std::cout << "Invalid ID for guest: " << guestId << "\n"; }
-                break;
-            }
-            case 2: { // Cancel booking
-                int roomNumber;
-                fin >> roomNumber;
-                hotel.cancelBooking(roomNumber);
-                break;
-            }
-            case 3: { // Check Room Availability
-                int roomNumber;
-                std::string date;
-                fin >> roomNumber >> date;
-                std::cout << "Room " << roomNumber << " availability on " << date << ": "
-                          << (hotel.isRoomAvailable(roomNumber, date) ? "Yes" : "No") << "\n";
-                break;
-            }
-            case 4: { // Display All Bookings
-                hotel.displayAllBookings();
-                break;
-            }
-            case 5: { // Exit
-                std::cout << "Exiting...\n";
-                return;
-            }
-            default: {
-                std::cerr << "Error: Invalid option: " << option << "\n";
-            }
-        }
-    }
-}
-*/
-
 void TestRunner::RunInteractiveMenu(Hotel& hotel) {
     std::cout << "\n--- Hotel Management System ---\n";
     while (true) {
@@ -122,8 +66,6 @@ void TestRunner::RunInteractiveMenu(Hotel& hotel) {
                 break;
             }
             case 3: { // Check Room Availability
-                // TODO: de rezolvat cu aparitia dummy-urilor in terminal
-                // TODO: + sa nu mi gaseasca un interval mai devreme decat cel pe care i-l dau eu
                 int roomNumber, nights;
                 std::string date;
                 std::cout << "Enter room number, date (YYYY-MM-DD) and nights to check availability: ";

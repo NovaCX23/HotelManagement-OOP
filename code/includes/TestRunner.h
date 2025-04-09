@@ -6,7 +6,7 @@
 class TestRunner {
 
 public:
-    //static void RunTestsFromFile(const std::string& filename, Hotel& hotel);
+
     static void RunInteractiveMenu(Hotel& hotel);
 };
 

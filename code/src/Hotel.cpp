@@ -1,6 +1,4 @@
 #include "../includes/Hotel.h"
-#include<iostream>
-#include <algorithm>
 
 void Hotel::addBooking(const Booking &booking) {
     bookings.push_back(booking);
@@ -8,14 +6,36 @@ void Hotel::addBooking(const Booking &booking) {
 }
 
 bool Hotel::cancelBooking(int roomNumber) {
+    std::cout << "Do you want to see all bookings for room " << roomNumber << "? (y/n): ";
+    char seeDetails;
+    std::cin >> seeDetails;
+    if (seeDetails == 'y' || seeDetails == 'Y') {
+        displayBookingsForRoom(roomNumber);
+    }
+    std::string targetDate;
+    std::cout << "Enter the check-in date of the booking to cancel (YYYY-MM-DD): ";
+    std::cin >> targetDate;
+
     for (auto i = bookings.begin(); i != bookings.end(); ++i) {
-        if (i->getRoom().getNumber() == roomNumber) {
-            bookings.erase(i);
-            std::cout << "Booking removed for room " << roomNumber << ".\n";
-            return true;
+        if (i->getRoom().getNumber() == roomNumber && i->getCheckIn() == targetDate) {
+            std::cout << "Booking found:\n";
+            std::cout << "Are you sure you want to cancel it? (y/n)";
+
+            char confirm;
+            std::cin >> confirm;
+            if (confirm == 'y' || confirm == 'Y') {
+                bookings.erase(i);
+                std::cout << "Booking successfully cancelled.\n";
+                return true;
+            }
+            else {
+                std::cout << "Cancellation aborted.\n";
+                return false;
+            }
         }
     }
-    std::cout << "No booking found for room " << roomNumber << ".\n";
+
+    std::cout << "No bookings with that check-in date found for room " << roomNumber << ".\n";
     return false;
 }
 
@@ -27,15 +47,37 @@ bool Hotel::isRoomAvailable(int roomNumber, const std::string& date) const {
     return true; // Available
 }
 
+void Hotel::displayBookingsForRoom(int roomNumber) const {
+    bool found = false;
+    std::cout << "--- Bookings for room: " << roomNumber << " ---\n";
+    for (const Booking& b : bookings)
+        if (b.getRoom().getNumber() == roomNumber) {
+            std::cout << "Check-in: "   << b.getCheckIn()
+                      << ", Checkout: " << b.getCheckout()
+                      << ", Guest: "    << b.getGuest().getName() << "\n";
+            found = true;
+        }
+    if (!found) {
+        std::cout << "No bookings found for room " << roomNumber << ".\n";
+    }
+}
+
+
 void Hotel::displayAllBookings() const {
     if (bookings.empty()) {
         std::cout << "No bookings in the system.\n";
         return;
     }
-    //std::cout << "--- All Bookings ---\n";
-    for (const Booking& booking : bookings) {
-        std::cout << booking << "\n---\n";
+    std::cout << "------- All Bookings -------\n";
+    std::set<int> uniqueRooms;
+    for (const Booking& b: bookings)
+        uniqueRooms.insert(b.getRoom().getNumber());
+
+    for (auto roomNumber:uniqueRooms) {
+        displayBookingsForRoom(roomNumber);
+        std::cout << "-----------------------------\n";
     }
+
 }
 
 bool compareByCheckIn(const Booking& first, const Booking& second) {
@@ -61,7 +103,7 @@ std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumbe
     std::sort(roomBookings.begin(), roomBookings.end(), compareByCheckIn);
 
     // Cautam un interval disponibil intre rezervari
-    int n = roomBookings.size();
+    auto n = roomBookings.size();
     for (auto i = 0; i < n - 1; ++i) {
         const Booking& current = roomBookings[i];
         const Booking& next = roomBookings[i + 1];
