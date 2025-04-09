@@ -103,8 +103,8 @@ std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumbe
     std::sort(roomBookings.begin(), roomBookings.end(), compareByCheckIn);
 
     // Cautam un interval disponibil intre rezervari
-    auto n = roomBookings.size();
-    for (auto i = 0; i < n - 1; ++i) {
+    size_t n = roomBookings.size();
+    for (size_t     i = 0; i < n - 1; ++i) {
         const Booking& current = roomBookings[i];
         const Booking& next = roomBookings[i + 1];
 
