@@ -1,5 +1,9 @@
 #include "../includes/Hotel.h"
 
+bool compareByCheckIn(const Booking& first, const Booking& second) {
+    return first.getCheckIn() < second.getCheckIn();
+}
+
 void Hotel::addBooking(const Booking &booking) {
     bookings.push_back(booking);
     std::cout << "Booking added for room " << booking.getRoom().getNumber() << "\n";
@@ -68,21 +72,42 @@ void Hotel::displayAllBookings() const {
         std::cout << "No bookings in the system.\n";
         return;
     }
-    std::cout << "------- All Bookings -------\n";
-    std::set<int> uniqueRooms;
-    for (const Booking& b: bookings)
-        uniqueRooms.insert(b.getRoom().getNumber());
 
-    for (auto roomNumber:uniqueRooms) {
-        displayBookingsForRoom(roomNumber);
-        std::cout << "-----------------------------\n";
+    char choice;
+    std::cout << "Do you want to display bookings by room (r) or all bookings together (a)? ";
+    std::cin >> choice;
+
+    std::vector<Booking> sortedBookings = bookings;
+    std::sort(sortedBookings.begin(), sortedBookings.end(), compareByCheckIn);
+
+    if (choice == 'r' || choice == 'R') {
+        std::cout << "------- Bookings by Room -------\n";
+        std::set<int> uniqueRooms;
+        for (const Booking& b : sortedBookings) {
+            uniqueRooms.insert(b.getRoom().getNumber());
+        }
+
+        for (auto roomNumber : uniqueRooms) {
+            displayBookingsForRoom(roomNumber);
+            std::cout << "-----------------------------\n";
+        }
+    }
+    else if (choice == 'a' || choice == 'A') {
+        std::cout << "------- All Bookings  -------\n";
+        for (const Booking& b : sortedBookings) {
+            std::cout << "Check-in: "   << b.getCheckIn()
+                      << ", Checkout: " << b.getCheckout()
+                      << ", Room: "     << b.getRoom().getNumber()
+                      << ", Guest: "    << b.getGuest().getName() << "\n";
+        }
+    }
+    else {
+        std::cout << "Invalid choice, please try again.\n";
     }
 
 }
 
-bool compareByCheckIn(const Booking& first, const Booking& second) {
-    return first.getCheckIn() < second.getCheckIn();
-}
+
 
 std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumber, const std::string& checkIn, int nights) const {
     // Cream un obiect Booking temporar
@@ -102,9 +127,18 @@ std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumbe
 
     std::sort(roomBookings.begin(), roomBookings.end(), compareByCheckIn);
 
+    // Verif daca perioada ceruta este disponibila inainte de prima rez
+    if (!roomBookings.empty()) {
+        const Booking& first = roomBookings.front();
+        Booking temp(room, guest, checkIn, nights);
+        if (temp.getCheckout() <= first.getCheckIn()) {
+            return {checkIn, temp.getCheckout()};
+        }
+    }
+
     // Cautam un interval disponibil intre rezervari
     size_t n = roomBookings.size();
-    for (size_t     i = 0; i < n - 1; ++i) {
+    for (size_t i = 0; i < n - 1; ++i) {
         const Booking& current = roomBookings[i];
         const Booking& next = roomBookings[i + 1];
 
