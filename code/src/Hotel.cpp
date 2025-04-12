@@ -4,7 +4,7 @@ bool compareByCheckIn(const Booking& first, const Booking& second) {
     return first.getCheckIn() < second.getCheckIn();
 }
 
-void Hotel::addBooking(const Booking &booking) {
+void Hotel::addBooking(const Booking& booking) {
     bookings.push_back(booking);
     std::cout << "Booking added for room " << booking.getRoom().getNumber() << "\n";
 }
@@ -53,12 +53,16 @@ bool Hotel::isRoomAvailable(int roomNumber, const std::string& date) const {
 
 void Hotel::displayBookingsForRoom(int roomNumber) const {
     bool found = false;
+    int index = 1;
     std::cout << "--- Bookings for room: " << roomNumber << " ---\n";
     for (const Booking& b : bookings)
         if (b.getRoom().getNumber() == roomNumber) {
-            std::cout << "Check-in: "   << b.getCheckIn()
+            std::cout << "#" << index++ << ": "
+                      << "Check-in: "   << b.getCheckIn()
                       << ", Checkout: " << b.getCheckout()
-                      << ", Guest: "    << b.getGuest().getName() << "\n";
+                      << ", Guest: "    << b.getGuest().getName()
+                      << ", Category: " << b.getRoom().getType()
+                      << ", Price: "    << b.getTotalPrice() << "\n";
             found = true;
         }
     if (!found) {
@@ -94,11 +98,15 @@ void Hotel::displayAllBookings() const {
     }
     else if (choice == 'a' || choice == 'A') {
         std::cout << "------- All Bookings  -------\n";
+        int index = 1;
         for (const Booking& b : sortedBookings) {
-            std::cout << "Check-in: "   << b.getCheckIn()
+            std::cout << "#" << index++ << ": "
+                      << "Check-in: "   << b.getCheckIn()
                       << ", Checkout: " << b.getCheckout()
                       << ", Room: "     << b.getRoom().getNumber()
-                      << ", Guest: "    << b.getGuest().getName() << "\n";
+                      << ", Guest: "    << b.getGuest().getName()
+                      << ", Category: " << b.getRoom().getType()
+                      << ", Price: "    << b.getTotalPrice() << "\n";
         }
     }
     else {

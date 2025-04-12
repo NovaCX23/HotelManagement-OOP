@@ -5,7 +5,30 @@
 #include "../includes/Guest.h"
 #include "../includes/Booking.h"
 
+bool isValidDateFormat(const std::string& date) {
+    return date.size() == 10 && date[4] == '-' && date[7] == '-';
+}
+
 void TestRunner::RunInteractiveMenu(Hotel& hotel) {
+
+    static bool start = false;
+    if (!start) {
+        Guest g1("Ana", "AAA111");
+        Guest g2("Ion", "III222");
+
+        Room r1(101, "single", 101.99);
+        Room r2(201, "double", 171.99);
+
+        Booking b1(r1, g1, "2025-01-01", 3);
+        Booking b2(r2, g2, "2025-01-08", 4);
+
+        hotel.addBooking(b1);
+        hotel.addBooking(b2);
+
+        start = true;
+        std::cout << "[Initial bookings loaded]\n";
+    }
+
     std::cout << "\n--- Hotel Management System ---\n";
     while (true) {
         std::cout << "\n1. Add Booking\n";
@@ -47,6 +70,16 @@ void TestRunner::RunInteractiveMenu(Hotel& hotel) {
                 // Check-in details
                 std::cout << "Enter check-in date (YYYY-MM-DD) and number of nights: ";
                 std::cin >> checkInDate >> nights;
+
+                if (!isValidDateFormat(checkInDate)) {
+                    std::cout << "Invalid date format. Please use YYYY-MM-DD.\n";
+                    break;
+                }
+
+                if (nights <= 0) {
+                    std::cout << "Invalid number of nights. Must be greater than 0.\n";
+                    break;
+                }
 
                 // Check availability
                 if (!hotel.isRoomAvailable(roomNumber, checkInDate)) {
