@@ -15,6 +15,7 @@ public:
     [[nodiscard]] bool isRoomAvailable(int roomNumber, const std::string& date) const;
     void displayBookingsForRoom(int roomNumber) const;
     void displayAllBookings() const;
+    const std::vector<Booking>& getAllBookings() const;
     [[nodiscard]] std::pair<std::string, std::string> findNextAvailablePeriod(int roomNumber, const std::string& checkIn, int nights) const;
 
 };

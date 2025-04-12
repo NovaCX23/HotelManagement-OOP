@@ -51,6 +51,11 @@ bool Hotel::isRoomAvailable(int roomNumber, const std::string& date) const {
     return true; // Available
 }
 
+const std::vector<Booking>& Hotel::getAllBookings() const {
+    return bookings;
+}
+
+
 void Hotel::displayBookingsForRoom(int roomNumber) const {
     bool found = false;
     int index = 1;

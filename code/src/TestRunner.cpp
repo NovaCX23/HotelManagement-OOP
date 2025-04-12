@@ -104,6 +104,26 @@ void TestRunner::RunInteractiveMenu(Hotel& hotel) {
                 std::cout << "Enter room number, date (YYYY-MM-DD) and nights to check availability: ";
                 std::cin >> roomNumber >> date >> nights;
 
+                bool hasBooking = false;
+                for (const auto& b : hotel.getAllBookings()) {
+                    if (b.getRoom().getNumber() == roomNumber) {
+                        hasBooking = true;
+                        break;
+                    }
+                }
+                if (!isValidDateFormat(date)) {
+                    std::cout << "Invalid date format. Please use YYYY-MM-DD.\n";
+                    break;
+                }
+                if (nights <= 0) {
+                    std::cout << "Invalid number of nights. Must be greater than 0.\n";
+                    break;
+                }
+                if (!hasBooking) {
+                    std::cout << "No bookings found for room number: " << roomNumber << ".\n";
+                    break;
+                }
+
                 auto nextPeriod = hotel.findNextAvailablePeriod(roomNumber, date, nights);
                 std::cout << "Room " << roomNumber << " is available from: "
                           << nextPeriod.first << " to " << nextPeriod.second << "\n";
