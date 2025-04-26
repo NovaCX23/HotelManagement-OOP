@@ -1,17 +1,28 @@
 # Hotel Management System🛌🏢
 
-### Project Description:
-The goal of this project is to simulate the core hotel operations, providing the following functionalities:
+## Descriere
+Acest proiect simulează un sistem de gestiune hotelieră, implementând operații de bază precum rezervarea camerelor, anularea rezervărilor, verificarea disponibilității și afișarea tuturor rezervărilor existente.
 
-1)Room Management – Add, remove, update, and search for rooms (with details like room number, type, price, and availability).
+## Funcționalități
+- Adăugare rezervări
+- Anulare rezervări
+- Verificare disponibilitate cameră
+- Afișare toate rezervările
+- Inițializare cu rezervări predefinite
 
-2)Guest Management – Register and view guest details.
+## Clase implementate
+- `Room` — gestiunea camerelor de hotel
+- `Guest` — gestiunea datelor clienților
+- `Booking` — rezervarea unei camere de către un client
+- `Hotel` — gestionarea rezervărilor într-un hotel
+- `Menu` — meniu interactiv pentru utilizator
 
-3)Booking System – Create, modify, and cancel reservations with automatic room availability checks.
+## Rulare
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
+./build/oop
 
-4)Reporting – Display lists of available/occupied rooms and booking history per guest.
-
-5)...?
 
 
 ### Tema 0

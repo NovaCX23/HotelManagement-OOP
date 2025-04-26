@@ -1,13 +1,13 @@
-#ifndef TESTRUNNER_H
-#define TESTRUNNER_H
+#ifndef MENU_H
+#define MENU_H
 
 #include "Hotel.h"
 //#include <string>
-class TestRunner {
+class Menu {
 
 public:
 
     static void RunInteractiveMenu(Hotel& hotel);
 };
 
-#endif //TESTRUNNER_H
+#endif //MENU_H

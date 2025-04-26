@@ -42,20 +42,16 @@ bool Booking::isActive(const std::string& currentDate) const {
 
     return (currentDate > checkIn) && (currentDate < checkOutDate);
 }
-std::string Booking::getCheckout() const {
-    // extragem datele din string
+// Static
+std::string Booking::calculateCheckout(const std::string& checkIn, int nights) {
     int year = std::stoi(checkIn.substr(0,4));
     int month = std::stoi(checkIn.substr(5, 2));
     int day = std::stoi(checkIn.substr(8, 2));
 
-    // calc nr de zile(check-in+nights)
     int totalDays = day + nights;
-
     while (true) {
-        // Calculează numărul de zile din luna curentă
         int daysInMonth;
         if (month == 2) {
-            // Verificare an bisect
             bool isLeapYear = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
             daysInMonth = isLeapYear ? 29 : 28;
         } else if (month == 4 || month == 6 || month == 9 || month == 11) {
@@ -63,27 +59,27 @@ std::string Booking::getCheckout() const {
         } else {
             daysInMonth = 31;
         }
-        // Dacă totalDays se încadrează în luna curentă, ieșim din buclă
         if (totalDays <= daysInMonth) {
             day = totalDays;
             break;
         }
-        // Altfel, trecem la luna următoare
         totalDays -= daysInMonth;
         month++;
-
-        // Dacă am depășit decembrie, trecem la anul următor
         if (month > 12) {
             month = 1;
             year++;
         }
     }
     std::string checkOutDate =
-    std::to_string(year) + "-" +
-    (month < 10 ? "0" : "") + std::to_string(month) + "-" +
-    (day < 10 ? "0" : "") + std::to_string(day);
+        std::to_string(year) + "-" +
+        (month < 10 ? "0" : "") + std::to_string(month) + "-" +
+        (day < 10 ? "0" : "") + std::to_string(day);
 
     return checkOutDate;
+}
+
+std::string Booking::getCheckout() const {
+    return Booking::calculateCheckout(this->checkIn, this->nights);
 }
 
 // Operator
@@ -99,12 +95,13 @@ Booking& Booking::operator=(const Booking& other) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Booking& booking) {
-    os << "Booking:\n"
-       << "  Guest: " << booking.guest << "\n"
-       << "  Room: " << booking.room << "\n"
-       << "  Check-in: " << booking.checkIn << " for " << booking.nights << " nights\n"
-       << "  Check-out: " << booking.getCheckout() << "\n"
-       << "  Total: $" << booking.getTotalPrice();
+    os << "[Room " << booking.room.getNumber()
+       << ", Guest: " << booking.guest.getName()
+       << ", Category: " << booking.room.getType()
+       << ", Check-in: " << booking.checkIn
+       << ", Checkout: " << booking.getCheckout()
+       << ", Total Price: $" << booking.getTotalPrice()
+       << "]";
     return os;
 }
 

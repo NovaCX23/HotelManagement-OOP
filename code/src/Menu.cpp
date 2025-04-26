@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include "../includes/TestRunner.h"
+#include "../includes/Menu.h"
 #include "../includes/Room.h"
 #include "../includes/Guest.h"
 #include "../includes/Booking.h"
@@ -9,7 +9,7 @@ bool isValidDateFormat(const std::string& date) {
     return date.size() == 10 && date[4] == '-' && date[7] == '-';
 }
 
-void TestRunner::RunInteractiveMenu(Hotel& hotel) {
+void Menu::RunInteractiveMenu(Hotel& hotel) {
 
     static bool start = false;
     if (!start) {
@@ -59,7 +59,7 @@ void TestRunner::RunInteractiveMenu(Hotel& hotel) {
                 Guest guest(guestName, guestId);
 
                 if (!guest.isValidId()) {
-                    std::cout << "Invalid ID: " << guestId << " for guest: " << guestName << "\n";
+                    std::cout << "Invalid ID format! Must be 3 letters + 3 digits (ABC123).\n";
                     break;
                 }
 
@@ -67,9 +67,20 @@ void TestRunner::RunInteractiveMenu(Hotel& hotel) {
                 std::cout << "Enter room number, category and price: ";
                 std::cin >> roomNumber >> roomType >> price;
 
+                if (roomNumber <= 0) {
+                    std::cout << "Invalid room number. Must be a positive integer.\n";
+                    break;
+                }
+
+                if (price <= 0) {
+                    std::cout << "Invalid price. Must be greater than 0.\n";
+                    break;
+                }
+
                 // Check-in details
                 std::cout << "Enter check-in date (YYYY-MM-DD) and number of nights: ";
                 std::cin >> checkInDate >> nights;
+                std::cin.get();
 
                 if (!isValidDateFormat(checkInDate)) {
                     std::cout << "Invalid date format. Please use YYYY-MM-DD.\n";
@@ -82,7 +93,7 @@ void TestRunner::RunInteractiveMenu(Hotel& hotel) {
                 }
 
                 // Check availability
-                if (!hotel.isRoomAvailable(roomNumber, checkInDate)) {
+                if (!hotel.isRoomAvailable(roomNumber, checkInDate, nights)) {
                     std::cout << "Room unavailable. Check availability\n";
                     break;
                 }

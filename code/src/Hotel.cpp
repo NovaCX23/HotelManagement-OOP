@@ -8,6 +8,9 @@ void Hotel::addBooking(const Booking& booking) {
     bookings.push_back(booking);
     std::cout << "Booking added for room " << booking.getRoom().getNumber() << "\n";
 }
+const std::vector<Booking>& Hotel::getAllBookings() const {
+    return bookings;
+}
 
 bool Hotel::cancelBooking(int roomNumber) {
     std::cout << "Do you want to see all bookings for room " << roomNumber << "? (y/n): ";
@@ -33,7 +36,7 @@ bool Hotel::cancelBooking(int roomNumber) {
                 return true;
             }
             else {
-                std::cout << "Cancellation aborted.\n";
+                std::cout << "Operation aborted.\n";
                 return false;
             }
         }
@@ -43,17 +46,22 @@ bool Hotel::cancelBooking(int roomNumber) {
     return false;
 }
 
-bool Hotel::isRoomAvailable(int roomNumber, const std::string& date) const {
-    for (const auto & booking : bookings) {
-        if (booking.getRoom().getNumber() == roomNumber && booking.isActive(date))
-            return false;
+bool Hotel::isRoomAvailable(int roomNumber, const std::string& newCheckIn, int nights) const {
+    std::string newCheckOut = Booking::calculateCheckout(newCheckIn, nights);
+
+    for (const auto& booking : bookings) {
+        if (booking.getRoom().getNumber() == roomNumber) {
+            std::string existingCheckIn = booking.getCheckIn();
+            std::string existingCheckOut = booking.getCheckout();
+
+            if (!(newCheckOut <= existingCheckIn || newCheckIn >= existingCheckOut)) {
+                return false;
+            }
+        }
     }
-    return true; // Available
+    return true;
 }
 
-const std::vector<Booking>& Hotel::getAllBookings() const {
-    return bookings;
-}
 
 
 void Hotel::displayBookingsForRoom(int roomNumber) const {
@@ -62,12 +70,7 @@ void Hotel::displayBookingsForRoom(int roomNumber) const {
     std::cout << "--- Bookings for room: " << roomNumber << " ---\n";
     for (const Booking& b : bookings)
         if (b.getRoom().getNumber() == roomNumber) {
-            std::cout << "#" << index++ << ": "
-                      << "Check-in: "   << b.getCheckIn()
-                      << ", Checkout: " << b.getCheckout()
-                      << ", Guest: "    << b.getGuest().getName()
-                      << ", Category: " << b.getRoom().getType()
-                      << ", Price: "    << b.getTotalPrice() << "\n";
+            std::cout << "#" << index++ << ": " << b << "\n";
             found = true;
         }
     if (!found) {
@@ -85,7 +88,6 @@ void Hotel::displayAllBookings() const {
     char choice;
     std::cout << "Do you want to display bookings by room (r) or all bookings together (a)? ";
     std::cin >> choice;
-
     std::vector<Booking> sortedBookings = bookings;
     std::sort(sortedBookings.begin(), sortedBookings.end(), compareByCheckIn);
 
@@ -105,13 +107,7 @@ void Hotel::displayAllBookings() const {
         std::cout << "------- All Bookings  -------\n";
         int index = 1;
         for (const Booking& b : sortedBookings) {
-            std::cout << "#" << index++ << ": "
-                      << "Check-in: "   << b.getCheckIn()
-                      << ", Checkout: " << b.getCheckout()
-                      << ", Room: "     << b.getRoom().getNumber()
-                      << ", Guest: "    << b.getGuest().getName()
-                      << ", Category: " << b.getRoom().getType()
-                      << ", Price: "    << b.getTotalPrice() << "\n";
+            std::cout << "#" << index++ << ": " << b << "\n";
         }
     }
     else {
@@ -123,14 +119,9 @@ void Hotel::displayAllBookings() const {
 
 
 std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumber, const std::string& checkIn, int nights) const {
-    // Cream un obiect Booking temporar
-    Room room(roomNumber, "type", 0);
-    Guest guest("Dummy", "DUM111");
-    Booking newBooking(room, guest, checkIn, nights);
+    std::string newCheckOut = Booking::calculateCheckout(checkIn, nights);
 
-    std::string newCheckOut = newBooking.getCheckout();
 
-    // Filtram doar rezervarile pentru camera respectiva
     std::vector<Booking> roomBookings;
     for (const Booking& b : bookings) {
         if (b.getRoom().getNumber() == roomNumber) {
@@ -140,16 +131,24 @@ std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumbe
 
     std::sort(roomBookings.begin(), roomBookings.end(), compareByCheckIn);
 
-    // Verif daca perioada ceruta este disponibila inainte de prima rez
+    if (roomBookings.empty()) {
+        return {checkIn, newCheckOut};  // Nicio rezervare
+    }
+
+    // dacă checkIn este dupa ultima rezervare
+    const Booking& lastBooking = roomBookings.back();
+    if (checkIn >= lastBooking.getCheckout()) {
+        return {checkIn, newCheckOut};
+    }
+
+    //  verificăm între rezervări
     if (!roomBookings.empty()) {
         const Booking& first = roomBookings.front();
-        Booking temp(room, guest, checkIn, nights);
-        if (temp.getCheckout() <= first.getCheckIn()) {
-            return {checkIn, temp.getCheckout()};
+        if (newCheckOut <= first.getCheckIn()) {
+            return {checkIn, newCheckOut};
         }
     }
 
-    // Cautam un interval disponibil intre rezervari
     size_t n = roomBookings.size();
     for (size_t i = 0; i < n - 1; ++i) {
         const Booking& current = roomBookings[i];
@@ -158,29 +157,18 @@ std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumbe
         std::string currentCheckout = current.getCheckout();
         std::string nextCheckIn = next.getCheckIn();
 
-        // Dacă e loc pentru perioada dorită între currentCheckout și nextCheckIn
-        Room room1(roomNumber, "type", 0);
-        Guest guest1("Dummy2", "DUM222");
-        Booking temp(room1, guest1, currentCheckout, nights);
-        std::string candidateCheckout = temp.getCheckout();
-
-        if (candidateCheckout <= nextCheckIn) {
-            return{currentCheckout, candidateCheckout};
+        std::string possibleCheckout = Booking::calculateCheckout(currentCheckout, nights);
+        if (possibleCheckout <= nextCheckIn) {
+            return {currentCheckout, possibleCheckout};
         }
     }
 
-    // Dacă nu s-a găsit interval între rezervări, returnăm perioada imediat după ultima rezervare
-    if (!roomBookings.empty()) {
-        const Booking& last = roomBookings.back();
-        std::string lastCheckout = last.getCheckout();
+    // Default fallback (după ultima rezervare)
+    const Booking& last = roomBookings.back();
+    std::string lastCheckout = last.getCheckout();
 
-        Room room1(roomNumber, "type", 0);
-        Guest guest1("Dummy2", "DUM222");
-        Booking temp(room1, guest1, lastCheckout, nights);
+    // în loc să faci Booking temp(...)
+    std::string newCheckout = Booking::calculateCheckout(lastCheckout, nights);
 
-        return {lastCheckout, temp.getCheckout()};
-    }
-
-    // Daca nu exista nicio rezervare
-    return {checkIn, newCheckOut};
+    return {lastCheckout, newCheckout};
 }
