@@ -77,6 +77,8 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
                     break;
                 }
 
+
+
                 // Check-in details
                 std::cout << "Enter check-in date (YYYY-MM-DD) and number of nights: ";
                 std::cin >> checkInDate >> nights;

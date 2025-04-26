@@ -23,7 +23,6 @@ public:
 
     // Public Functions
     [[nodiscard]] double getTotalPrice() const;
-    [[nodiscard]] bool isActive(const std::string& currentDate) const;
     [[nodiscard]] std::string getCheckout() const;
     static std::string calculateCheckout(const std::string& checkIn, int nights);
 

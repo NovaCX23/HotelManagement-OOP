@@ -36,12 +36,6 @@ double Booking::getTotalPrice() const {
     }
     return price;
 }
-bool Booking::isActive(const std::string& currentDate) const {
-    if (currentDate == checkIn) return true;
-    std::string checkOutDate = getCheckout();
-
-    return (currentDate > checkIn) && (currentDate < checkOutDate);
-}
 // Static
 std::string Booking::calculateCheckout(const std::string& checkIn, int nights) {
     int year = std::stoi(checkIn.substr(0,4));
@@ -84,14 +78,13 @@ std::string Booking::getCheckout() const {
 
 // Operator
 Booking& Booking::operator=(const Booking& other) {
-    if (this != &other) {  // Verifică auto-atribuire
-        // Folosind getter-ele
+    if (this != &other) {
         room = other.getRoom();
         guest = other.getGuest();
         checkIn = other.getCheckIn();
         nights = other.getNights();
     }
-    return *this;  // Returnează obiectul curent
+    return *this;
 }
 
 std::ostream& operator<<(std::ostream& os, const Booking& booking) {

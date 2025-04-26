@@ -78,13 +78,11 @@ void Hotel::displayBookingsForRoom(int roomNumber) const {
     }
 }
 
-
 void Hotel::displayAllBookings() const {
     if (bookings.empty()) {
         std::cout << "No bookings in the system.\n";
         return;
     }
-
     char choice;
     std::cout << "Do you want to display bookings by room (r) or all bookings together (a)? ";
     std::cin >> choice;
@@ -116,8 +114,6 @@ void Hotel::displayAllBookings() const {
 
 }
 
-
-
 std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumber, const std::string& checkIn, int nights) const {
     std::string newCheckOut = Booking::calculateCheckout(checkIn, nights);
 
@@ -142,11 +138,9 @@ std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumbe
     }
 
     //  verificăm între rezervări
-    if (!roomBookings.empty()) {
-        const Booking& first = roomBookings.front();
-        if (newCheckOut <= first.getCheckIn()) {
-            return {checkIn, newCheckOut};
-        }
+    const Booking& first = roomBookings.front();
+    if (newCheckOut <= first.getCheckIn()) {
+        return {checkIn, newCheckOut};
     }
 
     size_t n = roomBookings.size();
@@ -163,11 +157,10 @@ std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumbe
         }
     }
 
-    // Default fallback (după ultima rezervare)
+    // Default fallback
     const Booking& last = roomBookings.back();
     std::string lastCheckout = last.getCheckout();
 
-    // în loc să faci Booking temp(...)
     std::string newCheckout = Booking::calculateCheckout(lastCheckout, nights);
 
     return {lastCheckout, newCheckout};
