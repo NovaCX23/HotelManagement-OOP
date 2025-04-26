@@ -1,0 +1,33 @@
+[33m04c62ba[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m cateva change uri din lista de todo si din mail uri
+[33mbe00296[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m sters todo
+[33m06817aa[m found a problem : if i checked for a room that doesn t exist it crashed, now i think it s fixed
+[33m951f124[m time to check recordings to see how to release the first homework
+[33m28be4d3[m momentan am terminat lista de to-do uri , time to think of extra things to add before tema 2
+[33mdd0f25e[m erori
+[33mababffc[m Perfected cancelling a little
+[33mdf3baa1[m eroare git
+[33m5dab59e[m Progres ^_^
+[33mf802dcf[m continuam cu problema
+[33m257d19c[m continuam cu problema
+[33m7dacb7e[m continuam cu problema
+[33m0ae4828[m continuam cu problema
+[33m927ee5f[m continuam cu problema
+[33m85b6f11[m iar probleme la git ffs
+[33mdbc8ad3[m added a sexy interactive menu that has so many extra cases needed
+[33m79d35d5[m for now testRunner doesnt work properly (push to save progress)
+[33m46e3f88[m teste eroare git
+[33mca1ccc2[m teste eroare git
+[33m9a6582a[m test eroare git
+[33m0fc13da[m test eroare git
+[33me724b6b[m test eroare git
+[33mbeb5297[m acum ar trebui sa fie bine check-in check-out la booking
+[33mdf5b843[m Merge remote-tracking branch 'origin/main'
+[33md55b9dc[m de rezolvat : problema copierii multiple la booking               displonibilitatea camerei nu functioneaza tocmai bine               modificari de comentarii?
+[33ma221f54[m Update README.md
+[33m68c24c1[m made some changes to room and guest , and added the booking class. now i have to make some small functions for a general hotel class
+[33mf756821[m made guest class and booking , now i want to make something simple for tge general hotel class
+[33mcd76490[m For now the simple room class works
+[33mdb2bbb0[m Added the main and now building first functionality for a room
+[33m5115a2a[m Update README.md
+[33md915019[m Update README.md
+[33m82c66d4[m Initial commit
