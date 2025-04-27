@@ -1,4 +1,6 @@
 #include "../includes/Hotel.h"
+#include <fstream>
+#include <set>
 
 bool compareByCheckIn(const Booking& first, const Booking& second) {
     return first.getCheckIn() < second.getCheckIn();
@@ -164,4 +166,37 @@ std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumbe
     std::string newCheckout = Booking::calculateCheckout(lastCheckout, nights);
 
     return {lastCheckout, newCheckout};
+}
+
+
+// CSV
+
+void Hotel::saveBookingsToCSV(const std::string& filename) const {
+    std::ofstream fout(filename);
+    if (!fout.is_open()) {
+        std::cerr << "Error opening file for writing: " << filename << "\n";
+        return;
+    }
+    for (const auto& booking : bookings) {
+        fout << booking.toCSV() << "\n";
+    }
+}
+void Hotel::loadBookingsFromCSV(const std::string& filename) {
+    std::ifstream fin(filename);
+    if (!fin.is_open()) {
+        std::cerr << "Error opening file for reading: " << filename << "\n";
+        return;
+    }
+    bookings.clear();
+    std::string line;
+    while (std::getline(fin, line)) {
+        if (line.empty()) continue;
+        try {
+            Booking b = Booking::fromCSV(line);
+            bookings.push_back(b);
+        }
+        catch (const std::exception& e) {
+            std::cerr << "Error reading booking, skipping line. Reason: " << e.what() << "\n";
+        }
+    }
 }

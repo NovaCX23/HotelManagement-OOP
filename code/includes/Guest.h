@@ -13,7 +13,6 @@ public:
     //Getters
     [[nodiscard]] const std::string& getName() const;
     [[nodiscard]] const std::string& getId() const;
-
     [[nodiscard]] bool isValidId() const;
 
     // Operators

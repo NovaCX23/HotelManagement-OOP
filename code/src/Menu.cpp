@@ -11,31 +11,15 @@ bool isValidDateFormat(const std::string& date) {
 
 void Menu::RunInteractiveMenu(Hotel& hotel) {
 
-    static bool start = false;
-    if (!start) {
-        Guest g1("Ana", "AAA111");
-        Guest g2("Ion", "III222");
-
-        Room r1(101, "single", 101.99);
-        Room r2(201, "double", 171.99);
-
-        Booking b1(r1, g1, "2025-01-01", 3);
-        Booking b2(r2, g2, "2025-01-08", 4);
-
-        hotel.addBooking(b1);
-        hotel.addBooking(b2);
-
-        start = true;
-        std::cout << "[Initial bookings loaded]\n";
-    }
-
     std::cout << "\n--- Hotel Management System ---\n";
     while (true) {
         std::cout << "\n1. Add Booking\n";
         std::cout << "2. Cancel Booking\n";
         std::cout << "3. Check Room Availability\n";
         std::cout << "4. Display All Bookings\n";
-        std::cout << "5. Exit\n";
+        std::cout << "5. Save Bookings to CSV\n";
+        std::cout << "6. Load Bookings from CSV\n";
+        std::cout << "7. Exit\n";
         std::cout << "Select an option(number): ";
 
         int choice;
@@ -55,9 +39,7 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
                 // Guest information
                 std::cout << "Enter guest name and ID: ";
                 std::cin >> guestName >> guestId;
-
                 Guest guest(guestName, guestId);
-
                 if (!guest.isValidId()) {
                     std::cout << "Invalid ID format! Must be 3 letters + 3 digits (ABC123).\n";
                     break;
@@ -66,29 +48,23 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
                 // Room information
                 std::cout << "Enter room number, category and price: ";
                 std::cin >> roomNumber >> roomType >> price;
-
                 if (roomNumber <= 0) {
                     std::cout << "Invalid room number. Must be a positive integer.\n";
                     break;
                 }
-
                 if (price <= 0) {
                     std::cout << "Invalid price. Must be greater than 0.\n";
                     break;
                 }
 
-
-
                 // Check-in details
                 std::cout << "Enter check-in date (YYYY-MM-DD) and number of nights: ";
                 std::cin >> checkInDate >> nights;
                 std::cin.get();
-
                 if (!isValidDateFormat(checkInDate)) {
                     std::cout << "Invalid date format. Please use YYYY-MM-DD.\n";
                     break;
                 }
-
                 if (nights <= 0) {
                     std::cout << "Invalid number of nights. Must be greater than 0.\n";
                     break;
@@ -99,7 +75,6 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
                     std::cout << "Room unavailable. Check availability\n";
                     break;
                 }
-
                 Room room(roomNumber, roomType, price);
                 hotel.addBooking(Booking(room, guest, checkInDate, nights));
                 break;
@@ -146,7 +121,23 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
                 hotel.displayAllBookings();
                 break;
             }
-            case 5: { // Exit
+            case 5: { // Save Bookings to CSV
+                std::string filename;
+                std::cout << "Enter filename to save: (bookings.csv) ";
+                std::cin >> filename;
+                hotel.saveBookingsToCSV(filename);
+                std::cout << "Bookings saved successfully to " << filename << "\n";
+                break;
+            }
+            case 6: { // Load Bookings from CSV
+                std::string filename;
+                std::cout << "Enter filename to load: (bookings.csv) ";
+                std::cin >> filename;
+                hotel.loadBookingsFromCSV(filename);
+                std::cout << "Bookings loaded successfully from " << filename << "\n";
+                break;
+            }
+            case 7: { // Exit
                 std::cout << "Exiting...\n";
                 return;
             }

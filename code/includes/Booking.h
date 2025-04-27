@@ -26,6 +26,10 @@ public:
     [[nodiscard]] std::string getCheckout() const;
     static std::string calculateCheckout(const std::string& checkIn, int nights);
 
+    // CSV
+    std::string toCSV() const;
+    static Booking fromCSV(const std::string& csvLine);
+
     // Operators
     Booking& operator=(const Booking& other);
     friend std::ostream& operator<<(std::ostream& os, const Booking& booking);

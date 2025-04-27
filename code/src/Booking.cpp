@@ -1,5 +1,10 @@
 #include "../includes/Booking.h"
 #include <string>
+#include <ctime>
+#include <sstream>
+#include <iomanip>
+#include <stdexcept>
+
 
 // Constructor
 Booking::Booking(const Room& room, const Guest& guest, const std::string& checkIn, int nights)
@@ -36,44 +41,67 @@ double Booking::getTotalPrice() const {
     }
     return price;
 }
-// Static
 std::string Booking::calculateCheckout(const std::string& checkIn, int nights) {
-    int year = std::stoi(checkIn.substr(0,4));
-    int month = std::stoi(checkIn.substr(5, 2));
-    int day = std::stoi(checkIn.substr(8, 2));
+    std::tm date = {};
+    std::istringstream ss(checkIn);
+    ss >> std::get_time(&date, "%Y-%m-%d");
 
-    int totalDays = day + nights;
-    while (true) {
-        int daysInMonth;
-        if (month == 2) {
-            bool isLeapYear = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
-            daysInMonth = isLeapYear ? 29 : 28;
-        } else if (month == 4 || month == 6 || month == 9 || month == 11) {
-            daysInMonth = 30;
-        } else {
-            daysInMonth = 31;
-        }
-        if (totalDays <= daysInMonth) {
-            day = totalDays;
-            break;
-        }
-        totalDays -= daysInMonth;
-        month++;
-        if (month > 12) {
-            month = 1;
-            year++;
-        }
+    if (ss.fail()) {
+        throw std::runtime_error("Invalid date format in calculateCheckout");
     }
-    std::string checkOutDate =
-        std::to_string(year) + "-" +
-        (month < 10 ? "0" : "") + std::to_string(month) + "-" +
-        (day < 10 ? "0" : "") + std::to_string(day);
+    date.tm_mday += nights;
+    std::mktime(&date);
 
-    return checkOutDate;
+    std::ostringstream out;
+    out << std::put_time(&date, "%Y-%m-%d");
+    return out.str();
 }
 
 std::string Booking::getCheckout() const {
     return Booking::calculateCheckout(this->checkIn, this->nights);
+}
+
+// CSV
+std::string Booking::toCSV() const {
+    std::ostringstream oss;
+    oss << room.getNumber() << ","
+        << room.getType() << ","
+        << room.getPrice() << ","
+        << guest.getName() << ","
+        << guest.getId() << ","
+        << checkIn << ","
+        << nights;
+    return oss.str();
+}
+
+Booking Booking::fromCSV(const std::string& csvLine) {
+    std::istringstream iss(csvLine);
+    std::string token;
+
+    int roomNumber = 0;
+    std::string roomType = "standard";
+    double roomPrice = 100.0;
+    std::string guestName = "Unknown";
+    std::string guestId = "XXX000";
+    std::string checkIn = "2025-01-01";
+    int nights = 1;
+
+    try {
+        if (std::getline(iss, token, ',')) roomNumber = std::stoi(token);
+        if (std::getline(iss, token, ',')) roomType = token;
+        if (std::getline(iss, token, ',')) roomPrice = std::stod(token);
+        if (std::getline(iss, token, ',')) guestName = token;
+        if (std::getline(iss, token, ',')) guestId = token;
+        if (std::getline(iss, token, ',')) checkIn = token;
+        if (std::getline(iss, token, ',')) nights = std::stoi(token);
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error parsing booking CSV: " << e.what() << "\n";
+    }
+
+    Room room(roomNumber, roomType, roomPrice);
+    Guest guest(guestName, guestId);
+    return Booking(room, guest, checkIn, nights);
 }
 
 // Operator
