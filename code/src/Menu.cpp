@@ -125,7 +125,7 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
                 std::string filename;
                 std::cout << "Enter filename to save: (bookings.csv) ";
                 std::cin >> filename;
-                hotel.saveBookingsToCSV(filename);
+                hotel.saveBookingsToCSV("../data/" + filename);
                 std::cout << "Bookings saved successfully to " << filename << "\n";
                 break;
             }
@@ -133,7 +133,7 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
                 std::string filename;
                 std::cout << "Enter filename to load: (bookings.csv) ";
                 std::cin >> filename;
-                hotel.loadBookingsFromCSV(filename);
+                hotel.loadBookingsFromCSV("../data/" + filename);
                 std::cout << "Bookings loaded successfully from " << filename << "\n";
                 break;
             }
