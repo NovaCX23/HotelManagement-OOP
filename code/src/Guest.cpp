@@ -69,8 +69,8 @@ void Guest::displayBenefits() const {
         return;
     }
     std::cout << "Available benefits (standard rates):\n";
-    for (const auto& [name, price] : benefits) {
-        std::cout << "- " << name << ": $" << price << "\n";
+    for (const auto& [benefit, price] : benefits) {
+        std::cout << "- " << benefit << ": $" << price << "\n";
     }
 }
 
