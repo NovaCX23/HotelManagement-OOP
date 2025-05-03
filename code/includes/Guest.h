@@ -2,8 +2,11 @@
 #define GUEST_H
 #include<string>
 #include<iostream>
+#include<map>
 
 class Guest {
+
+protected:
     std::string name;
     std::string id;
 public:
@@ -13,7 +16,16 @@ public:
     //Getters
     [[nodiscard]] const std::string& getName() const;
     [[nodiscard]] const std::string& getId() const;
-    [[nodiscard]] bool isValidId() const;
+
+    // virtuals
+    virtual ~Guest() = default;
+    virtual bool isValidId() const;
+    virtual std::string getType() const;
+    virtual double guestDiscount(int nights) const;
+    virtual std::map<std::string, double> getAvailableBenefits() const;
+    virtual bool hasFreeBenefit(const std::string& benefitName) const;
+    virtual bool isEligibleForBenefit(const std::string& benefitName) const;
+    virtual void displayBenefits() const;
 
     // Operators
     friend std::ostream& operator<<(std::ostream& os, const Guest& guest);
