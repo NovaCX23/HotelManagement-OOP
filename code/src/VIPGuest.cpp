@@ -22,7 +22,7 @@ std::string VIPGuest::getType() const {
 
 std::map<std::string, double> VIPGuest::getAvailableBenefits() const {
     auto benefits = Guest::getAvailableBenefits();
-    for (auto& [name, price] : benefits) {
+    for (auto& [benefitName, price] : benefits) {
         price = 0.0; // all free for vip
     }
     return benefits;

@@ -18,9 +18,9 @@ std::vector<std::string> Guest::getFreeBenefits() const {
     std::vector<std::string> free;
     const auto& benefits = getAvailableBenefits();
 
-    for (const auto& [name, price] : benefits) {
+    for (const auto& [benefitName, price] : benefits) {
         if (price == 0.0)
-            free.push_back(name);
+            free.push_back(benefitName);
     }
     return free;
 }
@@ -80,23 +80,23 @@ void Guest::displayBenefits() const {
 
     bool hasFree = false, hasPaid = false;
 
-    for (const auto& [name, price] : benefits) {
+    for (const auto& [benefitName, price] : benefits) {
         if (price == 0.0) hasFree = true;
         else hasPaid = true;
     }
 
     if (hasFree) {
         std::cout << "Included benefits:\n";
-        for (const auto& [name, price] : benefits) {
+        for (const auto& [benefitName, price] : benefits) {
             if (price == 0.0)
-                std::cout << "- " << name << "\n";
+                std::cout << "- " << benefitName << "\n";
             }
     }
     if (hasPaid) {
         std::cout << "Optional (paid) benefits:\n";
-        for (const auto& [name, price] : benefits) {
+        for (const auto& [benefitName, price] : benefits) {
           if (price > 0.0)
-              std::cout << "- " << name << ": $" << price << "\n";
+              std::cout << "- " << benefitName << ": $" << price << "\n";
         }
     }
 }
