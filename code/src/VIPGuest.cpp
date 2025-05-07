@@ -7,10 +7,13 @@ VIPGuest::VIPGuest(const std::string& name, const std::string& id, const std::st
 }
 
 double VIPGuest::guestDiscount(int nights) const {
-    if (tier == "Bronze") return 0.10;
-    if (tier == "Silver") return 0.20;
-    if (tier == "Gold")   return 0.30;
-    return 0.0;
+    double discount = 0.0;
+    if (tier == "Gold") discount = 0.3;
+    else if (tier == "Silver") discount = 0.2;
+    else if (tier == "Bronze") discount = 0.1;
+
+    if (nights > 5) discount += 0.05; // Bonus extra
+    return discount;
 }
 
 std::string VIPGuest::getType() const {

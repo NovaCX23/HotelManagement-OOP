@@ -10,10 +10,13 @@ std::string CorporateGuest::getType() const {
 }
 
 double CorporateGuest::guestDiscount(int nights) const {
-    if (nrEmployees >= 30) return 0.25;
-    if (nrEmployees >= 20)  return 0.15;
-    if (nrEmployees >= 10)  return 0.10;
-    return 0.0;
+    double discount = 0.0;
+    if (nrEmployees >= 30) discount = 0.25;
+    else if (nrEmployees >= 20) discount = 0.15;
+    else if (nrEmployees >= 10) discount = 0.10;
+
+    if (nights >= 7) discount += 0.05; // extra discount
+    return discount;
 }
 
 std::vector<std::string> CorporateGuest::excludedBenefits() const {

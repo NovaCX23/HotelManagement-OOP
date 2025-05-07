@@ -12,9 +12,12 @@ std::string EventGuest::getType() const {
 }
 
 double EventGuest::guestDiscount(int nights) const {
-    if (expectedGuests >= 100) return 0.15;
-    if (eventDays >= 2) return 0.10;
-    return 0.0;
+    double discount = 0.0;
+    if (expectedGuests >= 100) discount = 0.15;
+    else if (eventDays >= 2) discount = 0.10;
+
+    if (nights > eventDays) discount += 0.05; // extra dacă stau și în afara evenimentului
+    return discount;
 }
 
 std::vector<std::string> EventGuest::excludedBenefits() const {
