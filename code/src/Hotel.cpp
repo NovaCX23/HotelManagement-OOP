@@ -28,6 +28,7 @@ bool Hotel::cancelBooking(int roomNumber) {
     for (auto i = bookings.begin(); i != bookings.end(); ++i) {
         if (i->getRoom().getNumber() == roomNumber && i->getCheckIn() == targetDate) {
             std::cout << "Booking found:\n";
+            std::cout << *i << "\n";
             std::cout << "Are you sure you want to cancel it? (y/n)";
 
             char confirm;

@@ -61,6 +61,12 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         code/includes/Hotel.h
         code/src/Menu.cpp
         code/includes/Menu.h
+        code/src/VIPGuest.cpp
+        code/includes/VIPGuest.h
+        code/src/CorporateGuest.cpp
+        code/includes/CorporateGuest.h
+        code/src/EventGuest.cpp
+        code/includes/EventGuest.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

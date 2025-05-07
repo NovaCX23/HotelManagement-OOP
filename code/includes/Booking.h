@@ -3,6 +3,7 @@
 
 #include "Room.h"
 #include "Guest.h"
+#include "VIPGuest.h"
 #include <string>
 
 class Booking {

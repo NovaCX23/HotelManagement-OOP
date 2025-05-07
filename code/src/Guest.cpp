@@ -14,6 +14,17 @@ const std::string& Guest::getId() const {
     return id;
 }
 
+std::vector<std::string> Guest::getFreeBenefits() const {
+    std::vector<std::string> free;
+    const auto& benefits = getAvailableBenefits();
+
+    for (const auto& [name, price] : benefits) {
+        if (price == 0.0)
+            free.push_back(name);
+    }
+    return free;
+}
+
 
 // Virtuals
 bool Guest::isValidId() const {
@@ -43,23 +54,21 @@ std::map<std::string, double> Guest::getAvailableBenefits() const {
             {"Room upgrade", 35.0},
             {"Late checkout", 20.0},
             {"Early check-in", 20.0},
-            {"Premium menu", 15.0},
+            {"Private dining", 15.0},
             {"Free airport transfer", 40.0},
-            {"Meeting room access", 30.0},
             {"Laundry service", 10.0},
             {"Welcome gift", 10.0},
             {"Free cancellation", 15.0}
     };
 }
 
-bool Guest::hasFreeBenefit(const std::string& benefitName) const {
-    auto benefits = getAvailableBenefits();
-    auto it = benefits.find(benefitName);
-    return it != benefits.end() && it->second == 0.0;
-}
 
 bool Guest::isEligibleForBenefit(const std::string& benefitName) const {
-    return getAvailableBenefits().count(benefitName) > 0;
+    return getAvailableBenefits().contains(benefitName);
+}
+
+std::vector<std::string> Guest::excludedBenefits() const{
+    return {};
 }
 
 void Guest::displayBenefits() const {
@@ -68,12 +77,29 @@ void Guest::displayBenefits() const {
         std::cout << "No benefits available.\n";
         return;
     }
-    std::cout << "Available benefits (standard rates):\n";
-    for (const auto& [benefit, price] : benefits) {
-        std::cout << "- " << benefit << ": $" << price << "\n";
+
+    bool hasFree = false, hasPaid = false;
+
+    for (const auto& [name, price] : benefits) {
+        if (price == 0.0) hasFree = true;
+        else hasPaid = true;
+    }
+
+    if (hasFree) {
+        std::cout << "Included benefits:\n";
+        for (const auto& [name, price] : benefits) {
+            if (price == 0.0)
+                std::cout << "- " << name << "\n";
+            }
+    }
+    if (hasPaid) {
+        std::cout << "Optional (paid) benefits:\n";
+        for (const auto& [name, price] : benefits) {
+          if (price > 0.0)
+              std::cout << "- " << name << ": $" << price << "\n";
+        }
     }
 }
-
 
 // Operators
 std::ostream& operator<<(std::ostream& os, const Guest& guest) {
