@@ -4,6 +4,7 @@
 #include<iostream>
 #include<map>
 #include<vector>
+#include<memory>
 
 class Guest {
 
@@ -29,8 +30,9 @@ public:
     virtual std::vector<std::string> excludedBenefits() const;
     virtual bool isEligibleForBenefit(const std::string& benefitName) const;
 
-    // function
+    // functions
     void displayBenefits() const;
+    static std::shared_ptr<Guest> createFromInput(const std::string& name, const std::string& id);
 
     // Operators
     friend std::ostream& operator<<(std::ostream& os, const Guest& guest);

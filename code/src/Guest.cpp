@@ -1,4 +1,7 @@
 #include "../includes/Guest.h"
+#include "../includes/VIPGuest.h"
+#include "../includes/CorporateGuest.h"
+#include "../includes/EventGuest.h"
 #include <cctype>
 
 // Constructor
@@ -71,6 +74,8 @@ std::vector<std::string> Guest::excludedBenefits() const{
     return {};
 }
 
+// Functions
+
 void Guest::displayBenefits() const {
     auto benefits = getAvailableBenefits();
     if (benefits.empty()) {
@@ -99,6 +104,43 @@ void Guest::displayBenefits() const {
               std::cout << "- " << benefitName << ": $" << price << "\n";
         }
     }
+}
+
+std::shared_ptr<Guest> Guest::createFromInput(const std::string& name, const std::string& id) {
+    if (id.starts_with("VIP")) {
+        std::string tier;
+        std::cout << "Enter VIP tier (Bronze/Silver/Gold): ";
+        std::cin >> tier;
+        return std::make_shared<VIPGuest>(name, id, tier);
+
+    } else if (id.starts_with("COR")) {
+        std::string companyName;
+        int nrEmployees;
+        std::cout << "Enter company name: ";
+        std::getline(std::cin >> std::ws, companyName);
+        std::cout << "Enter number of employees: ";
+        std::cin >> nrEmployees;
+        return std::make_shared<CorporateGuest>(name, id, companyName, nrEmployees);
+
+    } else if (id.starts_with("EVT")) {
+        std::string eventName;
+        int expectedGuests, eventDays;
+        char catering;
+        bool isCatered;
+        std::cout << "Enter event name: ";
+        std::getline(std::cin >> std::ws, eventName);
+        std::cout << "Expected number of guests: ";
+        std::cin >> expectedGuests;
+        std::cout << "Event duration (days): ";
+        std::cin >> eventDays;
+        std::cout << "Is catering included? (y/n): ";
+        std::cin >> catering;
+        isCatered = (catering == 'y' || catering == 'Y');
+        return std::make_shared<EventGuest>(name, id, eventName, expectedGuests, eventDays, isCatered);
+    }
+
+    // Default: standard guest
+    return std::make_shared<Guest>(name, id);
 }
 
 // Operators

@@ -5,10 +5,9 @@
 #include <iomanip>
 #include <stdexcept>
 
-
-// Constructor
-Booking::Booking(const Room& room, const Guest& guest, const std::string& checkIn, int nights)
-    : room(room), guest(guest), checkIn(checkIn), nights(nights) {
+// Constructors
+Booking::Booking(const Room& room, std::shared_ptr<Guest> guest, const std::string& checkIn, int nights)
+    : room(room), guest(std::move(guest)), checkIn(checkIn), nights(nights) {
     //std::cout << "Booking created for " << guest.getName() << " successfully " << "\n";
 }
 
@@ -18,34 +17,25 @@ Booking::Booking(const Booking& other)
 }
 
 // Getters
-const Guest& Booking::getGuest() const {
-    return guest;
-}
+std::shared_ptr<Guest> Booking::getGuest() const { return guest; }
+const std::string& Booking::getCheckIn() const { return checkIn; }
+const Room& Booking::getRoom() const { return room; }
+int Booking::getNights() const { return nights; }
 
-const std::string& Booking::getCheckIn() const {
-    return checkIn;
-}
 
-int Booking::getNights() const {
-    return nights;
-}
-const Room& Booking::getRoom() const {
-    return room;
-}
-
-// Public functions
+// Functions
 double Booking::getTotalPrice() const {
-    double price =  room.getPrice() * nights;
-    return price;
+    return room.getPrice() * nights;
 }
+
 std::string Booking::calculateCheckout(const std::string& checkIn, int nights) {
     std::tm date = {};
     std::istringstream ss(checkIn);
     ss >> std::get_time(&date, "%Y-%m-%d");
 
-    if (ss.fail()) {
+    if (ss.fail())
         throw std::runtime_error("Invalid date format in calculateCheckout");
-    }
+
     date.tm_mday += nights;
     std::mktime(&date);
 
@@ -55,7 +45,7 @@ std::string Booking::calculateCheckout(const std::string& checkIn, int nights) {
 }
 
 std::string Booking::getCheckout() const {
-    return Booking::calculateCheckout(this->checkIn, this->nights);
+    return calculateCheckout(this->checkIn, this->nights);
 }
 
 // CSV
@@ -64,8 +54,8 @@ std::string Booking::toCSV() const {
     oss << room.getNumber() << ","
         << room.getType() << ","
         << room.getPrice() << ","
-        << guest.getName() << ","
-        << guest.getId() << ","
+        << guest->getName() << ","
+        << guest->getId() << ","
         << checkIn << ","
         << nights;
     return oss.str();
@@ -97,11 +87,11 @@ Booking Booking::fromCSV(const std::string& csvLine) {
     }
 
     Room room(roomNumber, roomType, roomPrice);
-    Guest guest(guestName, guestId);
+    auto guest = Guest::createFromInput(guestName, guestId);
     return Booking(room, guest, checkIn, nights);
 }
 
-// Operator
+// Operators
 Booking& Booking::operator=(const Booking& other) {
     if (this != &other) {
         room = other.getRoom();
@@ -114,7 +104,8 @@ Booking& Booking::operator=(const Booking& other) {
 
 std::ostream& operator<<(std::ostream& os, const Booking& booking) {
     os << "[Room " << booking.room.getNumber()
-       << ", Guest: " << booking.guest.getName()
+       << ", Guest: " << booking.guest->getName()
+       << ", ID: " << booking.guest->getId()
        << ", Category: " << booking.room.getType()
        << ", Check-in: " << booking.checkIn
        << ", Checkout: " << booking.getCheckout()
@@ -125,5 +116,3 @@ std::ostream& operator<<(std::ostream& os, const Booking& booking) {
 
 // Destructor
 Booking::~Booking() = default;
-
-

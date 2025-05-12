@@ -10,9 +10,6 @@ void Hotel::addBooking(const Booking& booking) {
     bookings.push_back(booking);
     std::cout << "Booking added for room " << booking.getRoom().getNumber() << "\n";
 }
-const std::vector<Booking>& Hotel::getAllBookings() const {
-    return bookings;
-}
 
 bool Hotel::cancelBooking(int roomNumber) {
     std::cout << "Do you want to see all bookings for room " << roomNumber << "? (y/n): ";
@@ -49,23 +46,10 @@ bool Hotel::cancelBooking(int roomNumber) {
     return false;
 }
 
-bool Hotel::isRoomAvailable(int roomNumber, const std::string& newCheckIn, int nights) const {
-    std::string newCheckOut = Booking::calculateCheckout(newCheckIn, nights);
 
-    for (const auto& booking : bookings) {
-        if (booking.getRoom().getNumber() == roomNumber) {
-            std::string existingCheckIn = booking.getCheckIn();
-            std::string existingCheckOut = booking.getCheckout();
-
-            if (!(newCheckOut <= existingCheckIn || newCheckIn >= existingCheckOut)) {
-                return false;
-            }
-        }
-    }
-    return true;
+const std::vector<Booking>& Hotel::getAllBookings() const {
+    return bookings;
 }
-
-
 
 void Hotel::displayBookingsForRoom(int roomNumber) const {
     bool found = false;
@@ -98,7 +82,6 @@ void Hotel::displayAllBookings() const {
         for (const Booking& b : sortedBookings) {
             uniqueRooms.insert(b.getRoom().getNumber());
         }
-
         for (auto roomNumber : uniqueRooms) {
             displayBookingsForRoom(roomNumber);
             std::cout << "-----------------------------\n";
@@ -115,6 +98,22 @@ void Hotel::displayAllBookings() const {
         std::cout << "Invalid choice, please try again.\n";
     }
 
+}
+
+bool Hotel::isRoomAvailable(int roomNumber, const std::string& newCheckIn, int nights) const {
+    std::string newCheckOut = Booking::calculateCheckout(newCheckIn, nights);
+
+    for (const auto& booking : bookings) {
+        if (booking.getRoom().getNumber() == roomNumber) {
+            std::string existingCheckIn = booking.getCheckIn();
+            std::string existingCheckOut = booking.getCheckout();
+
+            if (!(newCheckOut <= existingCheckIn || newCheckIn >= existingCheckOut)) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumber, const std::string& checkIn, int nights) const {
@@ -170,8 +169,16 @@ std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumbe
 }
 
 
-// CSV
+std::shared_ptr<Guest> Hotel::findGuestById(const std::string& guestId) const {
+    for (const auto& booking : bookings) {
+        if (booking.getGuest()->getId() == guestId)
+            return booking.getGuest();
+    }
+    return nullptr;
+}
 
+
+// CSV
 void Hotel::saveBookingsToCSV(const std::string& filename) const {
     std::ofstream fout(filename);
     if (!fout.is_open()) {

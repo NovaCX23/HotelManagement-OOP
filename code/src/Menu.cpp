@@ -1,32 +1,55 @@
 #include <fstream>
 #include <iostream>
+#include <set>
+
 #include "../includes/Menu.h"
 #include "../includes/Room.h"
-#include "../includes/Guest.h"
 #include "../includes/Booking.h"
+#include "../includes/Guest.h"
 
 bool isValidDateFormat(const std::string& date) {
     return date.size() == 10 && date[4] == '-' && date[7] == '-';
 }
 
 void Menu::RunInteractiveMenu(Hotel& hotel) {
+    int option;
+    do {
+        std::cout << "\n--- Hotel Management ---\n";
+        std::cout << "1. Manage Bookings\n";
+        std::cout << "2. Manage Guests\n";
+        std::cout << "0. Exit\n";
+        std::cout << "Select an option: ";
+        std::cin >> option;
 
-    std::cout << "\n--- Hotel Management System ---\n";
-    while (true) {
-        std::cout << "\n1. Add Booking\n";
+        switch (option) {
+            case 1:
+                displayBookingsMenu(hotel);
+            break;
+            case 2:
+                displayGuestsMenu(hotel);
+            break;
+            case 0:
+                std::cout << "Exiting...\n";
+            break;
+            default:
+                std::cout << "Invalid choice. Try again.\n";
+        }
+    } while (option != 0);
+}
+
+void Menu::displayBookingsMenu(Hotel& hotel) {
+    int choice;
+    do {
+        std::cout << "\n--- Manage Bookings ---\n";
+        std::cout << "1. Add Booking\n";
         std::cout << "2. Cancel Booking\n";
         std::cout << "3. Check Room Availability\n";
         std::cout << "4. Display All Bookings\n";
         std::cout << "5. Save Bookings to CSV\n";
         std::cout << "6. Load Bookings from CSV\n";
-        std::cout << "7. Exit\n";
-        std::cout << "Select an option(number): ";
-
-        int choice;
-        if (!(std::cin >> choice)) {
-            std::cout << "Invalid input or end of input. Exiting...\n";
-            return;
-        }
+        std::cout << "0. Back\n";
+        std::cout << "Choose option: ";
+        std::cin >> choice;
 
         switch (choice) {
             case 1: { // Add booking
@@ -37,10 +60,13 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
                 int roomNumber;
 
                 // Guest information
-                std::cout << "Enter guest name and ID: ";
-                std::cin >> guestName >> guestId;
-                Guest guest(guestName, guestId);
-                if (!guest.isValidId()) {
+                std::cout << "Enter guest name: ";
+                std::getline(std::cin >> std::ws, guestName);
+                std::cout << "Enter guest id: ";
+                std::cin >> guestId;
+
+                auto guest = Guest::createFromInput(guestName, guestId);
+                if (!guest->isValidId()) {
                     std::cout << "Invalid ID format! Must be 3 letters + 3 digits (ABC123).\n";
                     break;
                 }
@@ -137,7 +163,7 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
                 std::cout << "Bookings loaded successfully from " << filename << "\n";
                 break;
             }
-            case 7: { // Exit
+            case 0: { // Exit
                 std::cout << "Exiting...\n";
                 return;
             }
@@ -146,5 +172,64 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
                 break;
             }
         }
-    }
+    } while (choice != 0);
+}
+
+void Menu::displayGuestsMenu(const Hotel& hotel) {
+    int option;
+    do {
+        std::cout << "\n--- Manage Guests ---\n";
+        std::cout << "1. List all guests\n";
+        std::cout << "2. Show benefits for guest (by ID)\n";
+        std::cout << "3. Show discount for guest (by ID)\n";
+        std::cout << "0. Back to Main Menu\n";
+        std::cout << "Choose option: ";
+        std::cin >> option;
+
+        switch (option) {
+            case 1: { // List all guests
+                std::set<std::string> seen;
+                for (const auto& b : hotel.getAllBookings()) {
+                    auto guest = b.getGuest();
+                    if (seen.insert(guest->getId()).second) {
+                        std::cout << "- " << guest->getName()
+                                  << " | " << guest->getId()
+                                  << " | " << guest->getType() << "\n";
+                    }
+                }
+                break;
+            }
+            case 2: { // Show benefits
+                std::string id;
+                std::cout << "Enter guest ID: ";
+                std::cin >> id;
+                if (auto guest = hotel.findGuestById(id)) {
+                    guest->displayBenefits();
+                } else {
+                    std::cout << "Guest not found.\n";
+                }
+                break;
+            }
+            case 3: { // Show discount
+                std::string id;
+                std::cout << "Enter guest ID: ";
+                std::cin >> id;
+                auto guest = hotel.findGuestById(id);
+                if (guest) {
+                    int nights;
+                    std::cout << "Enter number of nights: ";
+                    std::cin >> nights;
+                    std::cout << "Discount: "
+                              << guest->guestDiscount(nights) * 100 << "%\n";
+                } else {
+                    std::cout << "Guest not found.\n";
+                }
+                break;
+            }
+            case 0:
+                break;
+            default:
+                std::cout << "Invalid option.\n";
+        }
+    } while (option != 0);
 }

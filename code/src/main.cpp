@@ -19,3 +19,11 @@ int main() {
 //    la event daca nu respecta FullHotelBooking trebuie implementata o alternativa
 //    functionalitate in hotel pt FullHotelBooking
 //    update guest dependent stuff obv :))
+//    discount for guest trebuie sa stie deja cate nopti sta guest ul
+// probleme:
+//    company+events -> cere room number, category and price. Practic  ocupa o singura camera
+
+
+
+
+// TODO: Posibile probleme cu csv-ul, gen rezervari pe aceeasi data
