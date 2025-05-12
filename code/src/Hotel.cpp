@@ -168,7 +168,7 @@ std::pair<std::string, std::string> Hotel::findNextAvailablePeriod(int roomNumbe
     return {lastCheckout, newCheckout};
 }
 
-
+// Guest
 std::shared_ptr<Guest> Hotel::findGuestById(const std::string& guestId) const {
     for (const auto& booking : bookings) {
         if (booking.getGuest()->getId() == guestId)
@@ -176,6 +176,17 @@ std::shared_ptr<Guest> Hotel::findGuestById(const std::string& guestId) const {
     }
     return nullptr;
 }
+
+std::vector<Booking> Hotel::getBookingsForGuest(const std::string& guestId) const {
+    std::vector<Booking> result;
+    for (const auto& booking : bookings) {
+        if (booking.getGuest()->getId() == guestId) {
+            result.push_back(booking);
+        }
+    }
+    return result;
+}
+
 
 
 // CSV

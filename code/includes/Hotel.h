@@ -28,7 +28,7 @@ public:
     [[nodiscard]] std::pair<std::string, std::string> findNextAvailablePeriod(int roomNumber, const std::string& checkIn, int nights) const;
 
     std::shared_ptr<Guest> findGuestById(const std::string& guestId) const;
-
+    std::vector<Booking> getBookingsForGuest(const std::string& guestId) const;
 
     // CSV
     void saveBookingsToCSV(const std::string& filename) const;

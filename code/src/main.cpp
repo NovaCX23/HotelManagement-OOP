@@ -8,7 +8,6 @@ int main() {
 }
 
 //TODO: la menu ul principal 4 devine manage bookings(display, save, load)(meniu sep)
-//    5 devine eventual manage guest(beneficii, ...)
 //    cancellation cost
 //    calcul profit propriu-zis hotel tinand cont de pierderi
 //    cost de a deveni vip undeva adunat la profit
@@ -22,7 +21,7 @@ int main() {
 //    discount for guest trebuie sa stie deja cate nopti sta guest ul
 // probleme:
 //    company+events -> cere room number, category and price. Practic  ocupa o singura camera
-
+//    erori bife
 
 
 
