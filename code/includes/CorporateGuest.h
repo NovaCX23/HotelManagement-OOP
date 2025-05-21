@@ -19,7 +19,7 @@ public:
     bool isValidId() const override;
 
 
-    std::string getCompanyName() const { return companyName; }
+    const std::string getCompanyName() const { return companyName; }
     int getNrEmployees() const { return nrEmployees; }
     std::string getSummary() const;
 };

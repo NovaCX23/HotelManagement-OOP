@@ -9,6 +9,7 @@
 
 class Hotel {
     std::vector<Booking> bookings;
+    std::vector<Room> rooms;
 public:
     // Constructors
     Hotel() = default;
@@ -16,7 +17,7 @@ public:
     Hotel& operator=(const Hotel& other) = default;
     ~Hotel() = default;
 
-
+    // Bookings
     void addBooking(const Booking& booking);
     bool cancelBooking(int roomNumber);
 
@@ -27,12 +28,19 @@ public:
     [[nodiscard]] bool isRoomAvailable(int roomNumber, const std::string& date, int nights) const;
     [[nodiscard]] std::pair<std::string, std::string> findNextAvailablePeriod(int roomNumber, const std::string& checkIn, int nights) const;
 
+    // Guests
     std::shared_ptr<Guest> findGuestById(const std::string& guestId) const;
     std::vector<Booking> getBookingsForGuest(const std::string& guestId) const;
+
+    // Rooms
+    const std::vector<Room>& getAllRooms() const;
+    Room* findRoomByNumber(int roomNumber);
+    Room* findAvailableRoomByType(const std::string& type, const std::string& checkIn, int nights);
 
     // CSV
     void saveBookingsToCSV(const std::string& filename) const;
     void loadBookingsFromCSV(const std::string& filename);
+    void loadRoomsFromCSV(const std::string& filename);
 };
 
 #endif //HOTEL_H

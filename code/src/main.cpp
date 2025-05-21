@@ -3,6 +3,7 @@
 int main() {
 
     Hotel hotel;
+    hotel.loadRoomsFromCSV("../data/rooms.csv");
     Menu::RunInteractiveMenu(hotel);
     return 0;
 }

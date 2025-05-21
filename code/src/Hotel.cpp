@@ -1,10 +1,13 @@
 #include "../includes/Hotel.h"
 #include <fstream>
 #include <set>
+#include <sstream>
 
 bool compareByCheckIn(const Booking& first, const Booking& second) {
     return first.getCheckIn() < second.getCheckIn();
 }
+
+// Bookings
 
 void Hotel::addBooking(const Booking& booking) {
     bookings.push_back(booking);
@@ -105,7 +108,7 @@ bool Hotel::isRoomAvailable(int roomNumber, const std::string& newCheckIn, int n
 
     for (const auto& booking : bookings) {
         if (booking.getRoom().getNumber() == roomNumber) {
-            std::string existingCheckIn = booking.getCheckIn();
+            const std::string& existingCheckIn = booking.getCheckIn();
             std::string existingCheckOut = booking.getCheckout();
 
             if (!(newCheckOut <= existingCheckIn || newCheckIn >= existingCheckOut)) {
@@ -188,8 +191,60 @@ std::vector<Booking> Hotel::getBookingsForGuest(const std::string& guestId) cons
 }
 
 
+// Rooms
+const std::vector<Room>& Hotel::getAllRooms() const {
+    return rooms;
+}
+
+Room* Hotel::findRoomByNumber(int roomNumber) {
+    for (auto& room : rooms) {
+        if (room.getNumber() == roomNumber) {
+            return &room;
+        }
+    }
+    return nullptr;
+}
+Room* Hotel::findAvailableRoomByType(const std::string& type, const std::string& checkIn, int nights) {
+    for (auto& room : rooms) {
+        if (room.getType() == type && isRoomAvailable(room.getNumber(), checkIn, nights)) {
+            return &room;
+        }
+    }
+    return nullptr;
+}
+
 
 // CSV
+void Hotel::loadRoomsFromCSV(const std::string& filename) {
+    std::ifstream fin(filename);
+    if (!fin.is_open()) {
+        std::cerr << "Error opening room CSV file: " << filename << "\n";
+        return;
+    }
+
+    rooms.clear();
+    std::string line;
+    while (std::getline(fin, line)) {
+        std::istringstream iss(line);
+        std::string numberStr, type, priceStr;
+
+        if (std::getline(iss, numberStr, ',') &&
+            std::getline(iss, type, ',') &&
+            std::getline(iss, priceStr)) {
+            try {
+                int number = std::stoi(numberStr);
+                double price = std::stod(priceStr);
+                rooms.emplace_back(number, type, price);
+            } catch (const std::exception& e) {
+                std::cerr << "Invalid room data: " << line << " – " << e.what() << "\n";
+            }
+            }
+    }
+
+    std::cout << "Loaded " << rooms.size() << " rooms from " << filename << ".\n";
+}
+
+
 void Hotel::saveBookingsToCSV(const std::string& filename) const {
     std::ofstream fout(filename);
     if (!fout.is_open()) {

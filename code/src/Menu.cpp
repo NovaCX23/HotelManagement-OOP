@@ -60,13 +60,10 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
 
         switch (choice) {
             case 1: { // Add booking
-                std::string guestName, guestId, checkInDate;
+                std::string guestName, guestId, checkInDate, roomType;
                 int nights;
-                double price;
-                std::string roomType;
-                int roomNumber;
 
-                // Guest information
+                // Guest
                 std::cout << "Enter guest name: ";
                 std::getline(std::cin >> std::ws, guestName);
                 std::cout << "Enter guest id: ";
@@ -78,40 +75,93 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                     break;
                 }
 
-                // Room information
-                std::cout << "Enter room number, category and price: ";
-                std::cin >> roomNumber >> roomType >> price;
-                if (roomNumber <= 0) {
-                    std::cout << "Invalid room number. Must be a positive integer.\n";
-                    break;
-                }
-                if (price <= 0) {
-                    std::cout << "Invalid price. Must be greater than 0.\n";
-                    break;
-                }
+                // Room type
+                std::cout << "Enter desired room type (Standard/Deluxe/Suite): ";
+                std::cin >> roomType;
 
-                // Check-in details
                 std::cout << "Enter check-in date (YYYY-MM-DD) and number of nights: ";
                 std::cin >> checkInDate >> nights;
                 std::cin.get();
+
                 if (!isValidDateFormat(checkInDate)) {
                     std::cout << "Invalid date format. Please use YYYY-MM-DD.\n";
                     break;
                 }
                 if (nights <= 0) {
-                    std::cout << "Invalid number of nights. Must be greater than 0.\n";
+                    std::cout << "Invalid number of nights.\n";
                     break;
                 }
 
-                // Check availability
-                if (!hotel.isRoomAvailable(roomNumber, checkInDate, nights)) {
-                    std::cout << "Room unavailable. Check availability\n";
+                // Try to find available room directly
+                Room* roomPtr = hotel.findAvailableRoomByType(roomType, checkInDate, nights);
+                if (roomPtr) {
+                    Room room = *roomPtr;
+                    hotel.addBooking(Booking(room, guest, checkInDate, nights));
+                    std::cout << "Booking confirmed for Room " << room.getNumber()
+                              << " from " << checkInDate << " to "
+                              << Booking::calculateCheckout(checkInDate, nights) << "\n";
                     break;
                 }
-                Room room(roomNumber, roomType, price);
-                hotel.addBooking(Booking(room, guest, checkInDate, nights));
+
+                // No room available – show the 3 closest availability options
+                std::cout << "No available " << roomType << " room for that period.\n";
+                std::vector<std::pair<std::string, const Room*>> suggestions;
+
+                for (const auto& room : hotel.getAllRooms()) {
+                    if (room.getType() == roomType) {
+                        auto [startDate, endDate] = hotel.findNextAvailablePeriod(room.getNumber(), checkInDate, nights);
+                        suggestions.emplace_back(startDate, &room);
+                    }
+                }
+
+                std::sort(suggestions.begin(), suggestions.end());
+
+                std::vector<int> shownRooms;
+                int count = 0;
+
+                std::cout << "The 3 closest available options:\n";
+                for (const auto& [startDate, roomPtr] : suggestions) {
+                    std::string endDate = Booking::calculateCheckout(startDate, nights);
+                    std::cout << "- Room " << roomPtr->getNumber()
+                              << " | From: " << startDate << " to " << endDate << "\n";
+                    shownRooms.push_back(roomPtr->getNumber());
+                    ++count;
+                    if (count == 3) break;
+                }
+
+                // Option to book one of them
+                char confirm;
+                std::cout << "Would you like to book one of these? (y/n): ";
+                std::cin >> confirm;
+
+                if (confirm == 'y' || confirm == 'Y') {
+                    int chosenRoom;
+                    std::cout << "Enter the room number you want to book: ";
+                    std::cin >> chosenRoom;
+
+                    bool valid = false;
+                    std::string chosenStartDate;
+
+                    for (const auto& [startDate, roomPtr] : suggestions) {
+                        if (roomPtr->getNumber() == chosenRoom) {
+                            chosenStartDate = startDate;
+                            valid = true;
+                            Room room = *roomPtr;
+                            hotel.addBooking(Booking(room, guest, chosenStartDate, nights));
+                            std::cout << "Booking confirmed for Room " << room.getNumber()
+                                      << " from " << chosenStartDate << " to "
+                                      << Booking::calculateCheckout(chosenStartDate, nights) << "\n";
+                            break;
+                        }
+                    }
+                    if (!valid) {
+                        std::cout << "Invalid room number.\n";
+                    }
+                }
+
                 break;
             }
+
             case 2: { // Cancel Booking
                 int roomNumber;
                 std::cout << "Enter room number to cancel booking: ";
