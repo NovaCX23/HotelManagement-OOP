@@ -142,11 +142,11 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                     bool valid = false;
                     std::string chosenStartDate;
 
-                    for (const auto& [startDate, roomPtr] : suggestions) {
-                        if (roomPtr->getNumber() == chosenRoom) {
+                    for (const auto& [startDate, suggestedRoom] : suggestions) {
+                        if (suggestedRoom->getNumber() == chosenRoom) {
                             chosenStartDate = startDate;
                             valid = true;
-                            Room room = *roomPtr;
+                            Room room = *suggestedRoom;
                             hotel.addBooking(Booking(room, guest, chosenStartDate, nights));
                             std::cout << "Booking confirmed for Room " << room.getNumber()
                                       << " from " << chosenStartDate << " to "
