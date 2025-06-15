@@ -13,6 +13,7 @@ public:
     std::string getType() const override;
     std::map<std::string, double> getAvailableBenefits() const override;
     bool isValidId() const override;
+    std::string getFullId() const override;
 };
 
 #endif // VIPGUEST_H

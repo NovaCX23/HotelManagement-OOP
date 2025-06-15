@@ -6,6 +6,7 @@ int main() {
     hotel.loadRoomsFromCSV("../data/rooms.csv");
     Menu::RunInteractiveMenu(hotel);
     return 0;
+
 }
 
 //TODO: la menu ul principal 4 devine manage bookings(display, save, load)(meniu sep)
@@ -21,7 +22,6 @@ int main() {
 //    update guest dependent stuff obv :))
 //    discount for guest trebuie sa stie deja cate nopti sta guest ul
 // probleme:
-//    company+events -> cere room number, category and price. Practic  ocupa o singura camera
 //    erori bife
 
 

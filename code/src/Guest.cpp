@@ -41,6 +41,10 @@ bool Guest::isValidId() const {
     return true;
 }
 
+std::string Guest::getFullId() const {
+    return id;
+}
+
 std::string Guest::getType() const {
     return "Standard";
 }
@@ -142,6 +146,41 @@ std::shared_ptr<Guest> Guest::createFromInput(const std::string& name, const std
     // Default: standard guest
     return std::make_shared<Guest>(name, id);
 }
+
+std::shared_ptr<Guest> Guest::createFromCSV(const std::string& name, const std::string& id) {
+    // Split id după '|'
+    auto split = [](const std::string& s, char delim) {
+        std::vector<std::string> out;
+        std::string temp;
+        for (char c : s) {
+            if (c == delim) { out.push_back(temp); temp.clear(); }
+            else temp += c;
+        }
+        out.push_back(temp);
+        return out;
+    };
+
+    auto parts = split(id, '|');
+    const std::string& raw_id = parts[0];
+
+    if (raw_id.rfind("VIP", 0) == 0) {
+        std::string tier = (parts.size() >= 2 && !parts[1].empty()) ? parts[1] : "Bronze";
+        return std::make_shared<VIPGuest>(name, raw_id, tier);
+    } else if (raw_id.rfind("COR", 0) == 0) {
+        std::string company = (parts.size() >= 2) ? parts[1] : "Unknown";
+        int employees = (parts.size() >= 3) ? std::stoi(parts[2]) : 1;
+        return std::make_shared<CorporateGuest>(name, raw_id, company, employees);
+    } else if (raw_id.rfind("EVT", 0) == 0) {
+        std::string eventName = (parts.size() >= 2) ? parts[1] : "Event";
+        int expectedGuests = (parts.size() >= 3) ? std::stoi(parts[2]) : 1;
+        int eventDays = (parts.size() >= 4) ? std::stoi(parts[3]) : 1;
+        bool isCatered = (parts.size() >= 5) ? (parts[4] == "1" || parts[4] == "y" || parts[4] == "true") : false;
+        return std::make_shared<EventGuest>(name, raw_id, eventName, expectedGuests, eventDays, isCatered);
+    }
+    // Standard guest
+    return std::make_shared<Guest>(name, raw_id);
+}
+
 
 // Operators
 std::ostream& operator<<(std::ostream& os, const Guest& guest) {

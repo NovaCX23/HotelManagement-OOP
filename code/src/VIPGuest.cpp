@@ -31,3 +31,7 @@ std::map<std::string, double> VIPGuest::getAvailableBenefits() const {
 bool VIPGuest::isValidId() const {
     return id.substr(0, 3) == "VIP" && Guest::isValidId();
 }
+std::string VIPGuest::getFullId() const {
+    return id + "|" + tier;
+}
+

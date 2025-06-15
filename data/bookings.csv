@@ -1,3 +1,13 @@
-201,double,200,Ion,III456,2025-02-05,2
-301,VIP,400,Max,MMM333,2025-03-10,5
-101,single,120,Alex,AAA444,2025-01-10,5
+101,Standard,John Doe,ABC123,2025-06-01,3
+103,Standard,Anna Lux,VIP777|Gold,2025-06-08,2
+201,Deluxe,Boss Corp,COR333|MegaCorp|50,2025-06-12,1
+301,Suite,Eveniment MARE,EVT456|Wedding|100|3|1,2025-08-01,4
+104,Standard,Luca Roy,VIP223|Silver,2025-07-10,2
+201,Deluxe,Acme Corp,COR555|AcmeCorp|15,2025-09-15,5
+103,Standard,Small Firm,COR999|MiniFirm|8,2025-10-20,3
+104,Standard,Elena Popa,VIP999|Bronze,2025-11-05,7
+301,Suite,Corporate Event,EVT999|Conference|150|5|0,2025-12-01,6
+101,Standard,Alex Ionescu,AAA111,2026-01-10,2
+301,Suite,Mihai,VIP333|Gold,2025-05-05,4
+101,Standard,Mario,COR222|Mario Srl|100,2024-11-05,3
+101,Standard,Maria,EVT892|Wedding|101|1|1,2025-06-23,3

@@ -54,6 +54,14 @@ bool EventGuest::isValidId() const {
     return id.substr(0, 3) == "EVT" && Guest::isValidId();
 }
 
+std::string EventGuest::getFullId() const {
+    std::ostringstream oss;
+    oss << id << "|" << eventName << "|" << expectedGuests
+        << "|" << eventDays << "|" << (isCatered ? "1" : "0");
+    return oss.str();
+}
+
+
 std::string EventGuest::getEventSummary() const {
     std::ostringstream oss;
     oss << "Event: " << eventName

@@ -17,6 +17,8 @@ public:
     std::vector<std::string> excludedBenefits() const override;
     bool isEligibleForBenefit(const std::string& benefitName) const override;
     bool isValidId() const override;
+    std::string getFullId() const override;
+
 
 
     const std::string getCompanyName() const { return companyName; }

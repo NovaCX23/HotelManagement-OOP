@@ -49,6 +49,10 @@ bool CorporateGuest::isEligibleForBenefit(const std::string& benefitName) const 
 bool CorporateGuest::isValidId() const {
     return id.substr(0, 3) == "COR" && Guest::isValidId();
 }
+std::string CorporateGuest::getFullId() const {
+    return id + "|" + companyName + "|" + std::to_string(nrEmployees);
+}
+
 
 std::string CorporateGuest::getSummary() const {
     const int persoanePerCamera = 2; 

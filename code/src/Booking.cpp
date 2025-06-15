@@ -25,7 +25,9 @@ int Booking::getNights() const { return nights; }
 
 // Functions
 double Booking::getTotalPrice() const {
-    return room.getPrice() * nights;
+    double basePrice = room.getPrice() * nights;
+    double discount = guest->guestDiscount(nights);
+    return basePrice * (1.0 - discount);
 }
 
 std::string Booking::calculateCheckout(const std::string& checkIn, int nights) {
@@ -53,21 +55,20 @@ std::string Booking::toCSV() const {
     std::ostringstream oss;
     oss << room.getNumber() << ","
         << room.getType() << ","
-        << room.getPrice() << ","
         << guest->getName() << ","
-        << guest->getId() << ","
+        << guest->getFullId() << ","
         << checkIn << ","
         << nights;
     return oss.str();
 }
 
-Booking Booking::fromCSV(const std::string& csvLine) {
+
+Booking Booking::fromCSV(const std::string& csvLine, const std::vector<Room>& rooms) {
     std::istringstream iss(csvLine);
     std::string token;
 
     int roomNumber = 0;
-    std::string roomType = "standard";
-    double roomPrice = 100.0;
+    std::string roomType = "Standard";
     std::string guestName = "Unknown";
     std::string guestId = "XXX000";
     std::string checkIn = "2025-01-01";
@@ -76,7 +77,6 @@ Booking Booking::fromCSV(const std::string& csvLine) {
     try {
         if (std::getline(iss, token, ',')) roomNumber = std::stoi(token);
         if (std::getline(iss, token, ',')) roomType = token;
-        if (std::getline(iss, token, ',')) roomPrice = std::stod(token);
         if (std::getline(iss, token, ',')) guestName = token;
         if (std::getline(iss, token, ',')) guestId = token;
         if (std::getline(iss, token, ',')) checkIn = token;
@@ -86,10 +86,21 @@ Booking Booking::fromCSV(const std::string& csvLine) {
         std::cerr << "Error parsing booking CSV: " << e.what() << "\n";
     }
 
-    Room room(roomNumber, roomType, roomPrice);
-    auto guest = Guest::createFromInput(guestName, guestId);
-    return Booking(room, guest, checkIn, nights);
+    auto it = std::find_if(rooms.begin(), rooms.end(), [roomNumber](const Room& r) {
+        return r.getNumber() == roomNumber;
+    });
+
+    if (it == rooms.end()) {
+        throw std::runtime_error("Room not found for room number: " + std::to_string(roomNumber));
+    }
+
+    Room roomFinal = *it;
+
+    auto guest = Guest::createFromCSV(guestName, guestId);
+    return Booking(roomFinal, guest, checkIn, nights);
 }
+
+
 
 // Operators
 Booking& Booking::operator=(const Booking& other) {

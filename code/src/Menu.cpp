@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <set>
+#include <map>
 
 #include "../includes/Menu.h"
 #include "../includes/Room.h"
@@ -93,9 +94,9 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                 }
 
                 // Try to find available room directly
-                Room* roomPtr = hotel.findAvailableRoomByType(roomType, checkInDate, nights);
-                if (roomPtr) {
-                    Room room = *roomPtr;
+                Room* availableRoom = hotel.findAvailableRoomByType(roomType, checkInDate, nights);
+                if (availableRoom) {
+                    Room room = *availableRoom;
                     hotel.addBooking(Booking(room, guest, checkInDate, nights));
                     std::cout << "Booking confirmed for Room " << room.getNumber()
                               << " from " << checkInDate << " to "
@@ -120,11 +121,11 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                 int count = 0;
 
                 std::cout << "The 3 closest available options:\n";
-                for (const auto& [startDate, roomPtr] : suggestions) {
+                for (const auto& [startDate, suggestedRoom] : suggestions) {
                     std::string endDate = Booking::calculateCheckout(startDate, nights);
-                    std::cout << "- Room " << roomPtr->getNumber()
+                    std::cout << "- Room " << suggestedRoom->getNumber()
                               << " | From: " << startDate << " to " << endDate << "\n";
-                    shownRooms.push_back(roomPtr->getNumber());
+                    shownRooms.push_back(suggestedRoom->getNumber());
                     ++count;
                     if (count == 3) break;
                 }
@@ -154,6 +155,7 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                             break;
                         }
                     }
+
                     if (!valid) {
                         std::cout << "Invalid room number.\n";
                     }
@@ -161,7 +163,6 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
 
                 break;
             }
-
             case 2: { // Cancel Booking
                 int roomNumber;
                 std::cout << "Enter room number to cancel booking: ";
@@ -169,35 +170,45 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                 hotel.cancelBooking(roomNumber);
                 break;
             }
-            case 3: { // Check Room Availability
-                int roomNumber, nights;
-                std::string date;
-                std::cout << "Enter room number, date (YYYY-MM-DD) and nights to check availability: ";
-                std::cin >> roomNumber >> date >> nights;
+            case 3: { // General availability checker
+                std::string checkInDate;
+                int nights;
 
-                bool hasBooking = false;
-                for (const auto& b : hotel.getAllBookings()) {
-                    if (b.getRoom().getNumber() == roomNumber) {
-                        hasBooking = true;
-                        break;
-                    }
-                }
-                if (!isValidDateFormat(date)) {
+                std::cout << "Enter check-in date (YYYY-MM-DD): ";
+                std::cin >> checkInDate;
+                std::cout << "Enter number of nights: ";
+                std::cin >> nights;
+                std::cin.get();
+
+                if (!isValidDateFormat(checkInDate)) {
                     std::cout << "Invalid date format. Please use YYYY-MM-DD.\n";
                     break;
                 }
                 if (nights <= 0) {
-                    std::cout << "Invalid number of nights. Must be greater than 0.\n";
-                    break;
-                }
-                if (!hasBooking) {
-                    std::cout << "No bookings found for room number: " << roomNumber << ".\n";
+                    std::cout << "Invalid number of nights.\n";
                     break;
                 }
 
-                auto nextPeriod = hotel.findNextAvailablePeriod(roomNumber, date, nights);
-                std::cout << "Room " << roomNumber << " is available from: "
-                          << nextPeriod.first << " to " << nextPeriod.second << "\n";
+                std::map<std::string, std::vector<const Room*>> available;
+                for (const auto& room : hotel.getAllRooms()) {
+                    if (hotel.isRoomAvailable(room.getNumber(), checkInDate, nights)) {
+                        available[room.getType()].push_back(&room);
+                    }
+                }
+
+                if (available.empty()) {
+                    std::cout << "No rooms available for the selected period.\n";
+                }
+                else {
+                    std::cout << "--- Available rooms ---\n";
+                    for (const auto& [type, rooms] : available) {
+                        std::cout << type << ":\n";
+                        for (const auto* r : rooms) {
+                            std::cout << "  - Room " << r->getNumber()
+                                      << " ($" << r->getPrice() << " per night)\n";
+                        }
+                    }
+                }
                 break;
             }
             case 4: { // Display All Bookings
@@ -220,12 +231,10 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                 std::cout << "Bookings loaded successfully from " << filename << "\n";
                 break;
             }
-            case 0: { // Exit
-                std::cout << "Exiting...\n";
+            case 0:
                 return;
-            }
             default: {
-                std::cout << "Invalid choice. Please try again.\n";
+                std::cout << "Invalid option. Please try again.\n";
                 break;
             }
         }
@@ -296,9 +305,11 @@ void Menu::displayGuestsMenu(const Hotel& hotel) {
                 break;
             }
             case 0:
+                return;
+            default: {
+                std::cout << "Invalid option. Please try again.\n";
                 break;
-            default:
-                std::cout << "Invalid option.\n";
+            }
         }
     }
 }

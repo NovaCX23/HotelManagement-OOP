@@ -266,7 +266,7 @@ void Hotel::loadBookingsFromCSV(const std::string& filename) {
     while (std::getline(fin, line)) {
         if (line.empty()) continue;
         try {
-            Booking b = Booking::fromCSV(line);
+            Booking b = Booking::fromCSV(line, rooms);
             bookings.push_back(b);
         }
         catch (const std::exception& e) {

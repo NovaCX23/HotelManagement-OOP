@@ -29,7 +29,7 @@ public:
 
     // CSV
     std::string toCSV() const;
-    static Booking fromCSV(const std::string& csvLine);
+    static Booking fromCSV(const std::string& csvLine, const std::vector<Room>& rooms);
 
     // Operators
     Booking& operator=(const Booking& other);
