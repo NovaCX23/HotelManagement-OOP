@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iomanip>
 #include <stdexcept>
+#include<algorithm>
 
 // Constructors
 Booking::Booking(const Room& room, std::shared_ptr<Guest> guest, const std::string& checkIn, int nights)
