@@ -2,6 +2,7 @@
 #include "../includes/VIPGuest.h"
 #include "../includes/CorporateGuest.h"
 #include "../includes/EventGuest.h"
+#include "../includes/InfluencerGuest.h"
 #include "../includes/Exceptions.h"
 #include <cctype>
 
@@ -159,6 +160,20 @@ std::shared_ptr<Guest> Guest::createFromInput(const std::string& name, const std
 
     }
 
+    else if (id.starts_with("INF")) {
+        int followers;
+        std::cout << "Enter number of followers: ";
+        std::cin >> followers;
+
+        auto guest = std::make_shared<InfluencerGuest>(name, id, followers);
+        if (!guest->isValidId()) {
+            throw InvalidGuestIdException(id);
+        }
+        return guest;
+    }
+
+
+
     // Default: standard guest
     auto guest = std::make_shared<Guest>(name, id);
     if (!guest->isValidId()) {
@@ -209,6 +224,15 @@ std::shared_ptr<Guest> Guest::createFromCSV(const std::string& name, const std::
             throw InvalidGuestIdException(raw_id);
         return guest;
     }
+    else if (raw_id.rfind("INF", 0) == 0) {
+        int followers = (parts.size() >= 2) ? std::stoi(parts[1]) : 0;
+        auto guest = std::make_shared<InfluencerGuest>(name, raw_id, followers);
+        if (!guest->isValidId())
+            throw InvalidGuestIdException(raw_id);
+        return guest;
+    }
+
+
     // Standard guest
     auto guest = std::make_shared<Guest>(name, raw_id);
     if (!guest->isValidId())

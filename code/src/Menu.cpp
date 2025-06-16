@@ -11,6 +11,7 @@
 #include "../includes/VIPGuest.h"
 #include "../includes/CorporateGuest.h"
 #include "../includes/EventGuest.h"
+#include "../includes/InfluencerGuest.h"
 
 bool isValidDateFormat(const std::string& date) {
     return date.size() == 10 && date[4] == '-' && date[7] == '-';
@@ -344,8 +345,10 @@ void Menu::displayGuestsMenu(const Hotel& hotel) {
                     std::cout << event->getSummary() << "\n";
                 }
                 else if (auto vip = std::dynamic_pointer_cast<VIPGuest>(guest)) {
-                    // VIP nu are getSummary separat, afișăm doar tier-ul (deja inclus în getType())
                     std::cout << "Tier: " << vip->getType() << "\n";
+                }
+                else if (auto influencer = std::dynamic_pointer_cast<InfluencerGuest>(guest)) {
+                    std::cout << influencer->getSummary() << "\n";
                 }
                 else {
                     std::cout << "Standard Guest\n";
