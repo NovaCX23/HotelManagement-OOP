@@ -215,9 +215,11 @@ Room* Hotel::findRoomByNumber(int roomNumber) {
 }
 Room* Hotel::findAvailableRoomByType(const std::string& type, const std::string& checkIn, int nights) {
     for (auto& room : rooms) {
-        if (room.getType() == type && isRoomAvailable(room.getNumber(), checkIn, nights)) {
+        if (room.getType() == type) {
+            isRoomAvailable(room.getNumber(), checkIn, nights);
             return &room;
         }
+
     }
     return nullptr;
 }
