@@ -48,10 +48,3 @@ std::string InfluencerGuest::getFullId() const {
 	return id + "|" + std::to_string(followerCount);
 }
 
-std::string InfluencerGuest::getSummary() const {
-	std::ostringstream os;
-	os << "Influencer Guest - " << name << " (" << id << ")\n";
-	os << "Followers: " << followerCount << "\n";
-	os << "Estimated indirect profit: $" << estimatedProfit();
-	return os.str();
-}
