@@ -179,10 +179,10 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                 break;
             }
             case 3: { // General availability checker
-                std::string checkInDate;
-                int nights;
 
                 try{
+                    std::string checkInDate;
+                    int nights;
                     std::cout << "Enter check-in date (YYYY-MM-DD): ";
                     std::cin >> checkInDate;
                     std::cout << "Enter number of nights: ";

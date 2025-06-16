@@ -74,7 +74,6 @@ Booking Booking::fromCSV(const std::string& csvLine, const std::vector<Room>& ro
     std::string token;
 
     int roomNumber = 0;
-    std::string roomType = "Standard";
     std::string guestName = "Unknown";
     std::string guestId = "XXX000";
     std::string checkIn = "2025-01-01";
@@ -82,7 +81,6 @@ Booking Booking::fromCSV(const std::string& csvLine, const std::vector<Room>& ro
 
     try {
         if (std::getline(iss, token, ',')) roomNumber = std::stoi(token);
-        if (std::getline(iss, token, ',')) roomType = token;
         if (std::getline(iss, token, ',')) guestName = token;
         if (std::getline(iss, token, ',')) guestId = token;
         if (std::getline(iss, token, ',')) checkIn = token;

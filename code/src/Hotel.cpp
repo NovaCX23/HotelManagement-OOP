@@ -213,18 +213,15 @@ Room* Hotel::findRoomByNumber(int roomNumber) {
     }
     throw RoomNotFoundException(roomNumber);
 }
+
 Room* Hotel::findAvailableRoomByType(const std::string& type, const std::string& checkIn, int nights) {
     for (auto& room : rooms) {
         if (room.getType() == type) {
-            if (isRoomAvailable(room.getNumber(), checkIn, nights)) {
-                return &room;
-            }
+            return &room;
         }
-
     }
     return nullptr;
 }
-
 
 // CSV
 void Hotel::loadRoomsFromCSV(const std::string& filename) {
