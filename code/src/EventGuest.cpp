@@ -62,11 +62,15 @@ std::string EventGuest::getFullId() const {
 }
 
 
-std::string EventGuest::getEventSummary() const {
+std::string EventGuest::getSummary() const {
     std::ostringstream oss;
     oss << "Event: " << eventName
-        << " — " << expectedGuests << " guest" << (expectedGuests != 1 ? "s" : "")
+        << " - " << expectedGuests << " guest" << (expectedGuests != 1 ? "s" : "")
         << " over " << eventDays << " day" << (eventDays != 1 ? "s" : "");
     if (isCatered) oss << ", catering included";
     return oss.str();
+}
+
+std::shared_ptr<Guest> EventGuest::clone() const {
+    return std::make_shared<EventGuest>(*this);
 }

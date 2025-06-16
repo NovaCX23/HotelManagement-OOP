@@ -60,8 +60,12 @@ std::string CorporateGuest::getSummary() const {
 
     std::ostringstream oss;
     oss << "Bookings made for company: " << companyName
-        << " — " << nrEmployees << " employee" << (nrEmployees != 1 ? "s" : "")
+        << " - " << nrEmployees << " employee" << (nrEmployees != 1 ? "s" : "")
         << " accommodated in " << nrCamere
         << " room" << (nrCamere != 1 ? "s" : "") << ".";
     return oss.str();
+}
+
+std::shared_ptr<Guest> CorporateGuest::clone() const {
+    return std::make_shared<CorporateGuest>(*this);
 }

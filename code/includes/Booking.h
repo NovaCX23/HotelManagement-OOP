@@ -7,6 +7,7 @@
 #include <memory>
 
 class Booking {
+    static int totalBookings;
     Room room;
     std::shared_ptr<Guest> guest;
     std::string checkIn;
@@ -21,6 +22,7 @@ public:
     [[nodiscard]] std::shared_ptr<Guest> getGuest() const;
     [[nodiscard]] const std::string& getCheckIn() const;
     [[nodiscard]] int getNights() const;
+    static int getTotalBookings() { return totalBookings; }
 
     // Public Functions
     [[nodiscard]] double getTotalPrice() const;

@@ -31,6 +31,8 @@ public:
     virtual std::vector<std::string> excludedBenefits() const;
     virtual bool isEligibleForBenefit(const std::string& benefitName) const;
 
+    virtual std::shared_ptr<Guest> clone() const;
+
     // functions
     void displayBenefits() const;
     static std::shared_ptr<Guest> createFromInput(const std::string& name, const std::string& id);

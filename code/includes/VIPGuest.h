@@ -14,6 +14,8 @@ public:
     std::map<std::string, double> getAvailableBenefits() const override;
     bool isValidId() const override;
     std::string getFullId() const override;
+    std::shared_ptr<Guest> clone() const override;
+
 };
 
 #endif // VIPGUEST_H

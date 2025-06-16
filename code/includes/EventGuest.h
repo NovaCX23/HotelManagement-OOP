@@ -21,10 +21,11 @@ public:
     bool isEligibleForBenefit(const std::string& benefitName) const override;
     bool isValidId() const override;
 	std::string getFullId() const override;
+	std::shared_ptr<Guest> clone() const override;
 
 
 
-    std::string getEventSummary() const;
+    std::string getSummary() const;
 };
 
 #endif // EVENTGUEST_H

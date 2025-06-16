@@ -18,6 +18,7 @@ public:
     bool isEligibleForBenefit(const std::string& benefitName) const override;
     bool isValidId() const override;
     std::string getFullId() const override;
+    std::shared_ptr<Guest> clone() const override;
 
 
 

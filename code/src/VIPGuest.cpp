@@ -35,3 +35,7 @@ std::string VIPGuest::getFullId() const {
     return id + "|" + tier;
 }
 
+std::shared_ptr<Guest> VIPGuest::clone() const {
+    return std::make_shared<VIPGuest>(*this);
+}
+

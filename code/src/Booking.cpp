@@ -1,4 +1,5 @@
 #include "../includes/Booking.h"
+#include "../includes/Exceptions.h"
 #include <string>
 #include <ctime>
 #include <sstream>
@@ -6,10 +7,13 @@
 #include <stdexcept>
 #include<algorithm>
 
+
+int Booking::totalBookings = 0;
 // Constructors
 Booking::Booking(const Room& room, std::shared_ptr<Guest> guest, const std::string& checkIn, int nights)
     : room(room), guest(std::move(guest)), checkIn(checkIn), nights(nights) {
     //std::cout << "Booking created for " << guest.getName() << " successfully " << "\n";
+    totalBookings++;
 }
 
 Booking::Booking(const Booking& other)
@@ -22,6 +26,7 @@ std::shared_ptr<Guest> Booking::getGuest() const { return guest; }
 const std::string& Booking::getCheckIn() const { return checkIn; }
 const Room& Booking::getRoom() const { return room; }
 int Booking::getNights() const { return nights; }
+
 
 
 // Functions
@@ -37,7 +42,7 @@ std::string Booking::calculateCheckout(const std::string& checkIn, int nights) {
     ss >> std::get_time(&date, "%Y-%m-%d");
 
     if (ss.fail())
-        throw std::runtime_error("Invalid date format in calculateCheckout");
+        throw InvalidDateFormatException(checkIn);
 
     date.tm_mday += nights;
     std::mktime(&date);

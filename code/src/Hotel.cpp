@@ -1,4 +1,5 @@
 #include "../includes/Hotel.h"
+#include "../includes/Exceptions.h"
 #include <fstream>
 #include <set>
 #include <sstream>
@@ -112,7 +113,7 @@ bool Hotel::isRoomAvailable(int roomNumber, const std::string& newCheckIn, int n
             std::string existingCheckOut = booking.getCheckout();
 
             if (!(newCheckOut <= existingCheckIn || newCheckIn >= existingCheckOut)) {
-                return false;
+                throw BookingConflictException();
             }
         }
     }
@@ -202,7 +203,7 @@ Room* Hotel::findRoomByNumber(int roomNumber) {
             return &room;
         }
     }
-    return nullptr;
+    throw RoomNotFoundException(roomNumber);
 }
 Room* Hotel::findAvailableRoomByType(const std::string& type, const std::string& checkIn, int nights) {
     for (auto& room : rooms) {

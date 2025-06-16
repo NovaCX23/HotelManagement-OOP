@@ -2,6 +2,7 @@
 #include "../includes/VIPGuest.h"
 #include "../includes/CorporateGuest.h"
 #include "../includes/EventGuest.h"
+#include "../includes/Exceptions.h"
 #include <cctype>
 
 // Constructor
@@ -115,7 +116,12 @@ std::shared_ptr<Guest> Guest::createFromInput(const std::string& name, const std
         std::string tier;
         std::cout << "Enter VIP tier (Bronze/Silver/Gold): ";
         std::cin >> tier;
-        return std::make_shared<VIPGuest>(name, id, tier);
+        auto guest = std::make_shared<VIPGuest>(name, id, tier);
+        if (!guest->isValidId()) {
+            throw InvalidGuestIdException(id);
+        }
+        return guest;
+
 
     } else if (id.starts_with("COR")) {
         std::string companyName;
@@ -124,7 +130,12 @@ std::shared_ptr<Guest> Guest::createFromInput(const std::string& name, const std
         std::getline(std::cin >> std::ws, companyName);
         std::cout << "Enter number of employees: ";
         std::cin >> nrEmployees;
-        return std::make_shared<CorporateGuest>(name, id, companyName, nrEmployees);
+        auto guest = std::make_shared<CorporateGuest>(name, id, companyName, nrEmployees);
+        if (!guest->isValidId()) {
+            throw InvalidGuestIdException(id);
+        }
+        return guest;
+
 
     } else if (id.starts_with("EVT")) {
         std::string eventName;
@@ -140,11 +151,21 @@ std::shared_ptr<Guest> Guest::createFromInput(const std::string& name, const std
         std::cout << "Is catering included? (y/n): ";
         std::cin >> catering;
         isCatered = (catering == 'y' || catering == 'Y');
-        return std::make_shared<EventGuest>(name, id, eventName, expectedGuests, eventDays, isCatered);
+        auto guest = std::make_shared<EventGuest>(name, id, eventName, expectedGuests, eventDays, isCatered);
+        if (!guest->isValidId()) {
+            throw InvalidGuestIdException(id);
+        }
+        return guest;
+
     }
 
     // Default: standard guest
-    return std::make_shared<Guest>(name, id);
+    auto guest = std::make_shared<Guest>(name, id);
+    if (!guest->isValidId()) {
+        throw InvalidGuestIdException(id);
+    }
+    return guest;
+
 }
 
 std::shared_ptr<Guest> Guest::createFromCSV(const std::string& name, const std::string& id) {
@@ -165,20 +186,39 @@ std::shared_ptr<Guest> Guest::createFromCSV(const std::string& name, const std::
 
     if (raw_id.rfind("VIP", 0) == 0) {
         std::string tier = (parts.size() >= 2 && !parts[1].empty()) ? parts[1] : "Bronze";
-        return std::make_shared<VIPGuest>(name, raw_id, tier);
+        auto guest = std::make_shared<VIPGuest>(name, raw_id, tier);
+        if (!guest->isValidId())
+            throw InvalidGuestIdException(raw_id);
+        return guest;
+
     } else if (raw_id.rfind("COR", 0) == 0) {
         std::string company = (parts.size() >= 2) ? parts[1] : "Unknown";
         int employees = (parts.size() >= 3) ? std::stoi(parts[2]) : 1;
-        return std::make_shared<CorporateGuest>(name, raw_id, company, employees);
+        auto guest = std::make_shared<CorporateGuest>(name, raw_id, company, employees);
+        if (!guest->isValidId())
+            throw InvalidGuestIdException(raw_id);
+        return guest;
+
     } else if (raw_id.rfind("EVT", 0) == 0) {
         std::string eventName = (parts.size() >= 2) ? parts[1] : "Event";
         int expectedGuests = (parts.size() >= 3) ? std::stoi(parts[2]) : 1;
         int eventDays = (parts.size() >= 4) ? std::stoi(parts[3]) : 1;
         bool isCatered = (parts.size() >= 5) ? (parts[4] == "1" || parts[4] == "y" || parts[4] == "true") : false;
-        return std::make_shared<EventGuest>(name, raw_id, eventName, expectedGuests, eventDays, isCatered);
+        auto guest = std::make_shared<EventGuest>(name, raw_id, eventName, expectedGuests, eventDays, isCatered);
+        if (!guest->isValidId())
+            throw InvalidGuestIdException(raw_id);
+        return guest;
     }
     // Standard guest
-    return std::make_shared<Guest>(name, raw_id);
+    auto guest = std::make_shared<Guest>(name, raw_id);
+    if (!guest->isValidId())
+        throw InvalidGuestIdException(raw_id);
+    return guest;
+
+}
+
+ std::shared_ptr<Guest>Guest::clone() const {
+    return std::make_shared<Guest>(*this);
 }
 
 

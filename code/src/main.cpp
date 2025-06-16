@@ -1,13 +1,22 @@
 #include "../includes/Menu.h"
+#include "../includes/Exceptions.h"
+
 
 int main() {
-
-    Hotel hotel;
-    hotel.loadRoomsFromCSV("../data/rooms.csv");
-    Menu::RunInteractiveMenu(hotel);
+    try {
+        Hotel hotel;
+        hotel.loadRoomsFromCSV("../data/rooms.csv");
+        Menu::RunInteractiveMenu(hotel);
+    }
+    catch (const Exceptions& e) {
+        std::cerr << "Application error: " << e.what() << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Unexpected system error: " << e.what() << std::endl;
+    }
     return 0;
-
 }
+
 
 //TODO: la menu ul principal 4 devine manage bookings(display, save, load)(meniu sep)
 //    cancellation cost
@@ -21,9 +30,6 @@ int main() {
 //    functionalitate in hotel pt FullHotelBooking
 //    update guest dependent stuff obv :))
 //    discount for guest trebuie sa stie deja cate nopti sta guest ul
-// probleme:
-//    erori bife
-
 
 
 // TODO: Posibile probleme cu csv-ul, gen rezervari pe aceeasi data
