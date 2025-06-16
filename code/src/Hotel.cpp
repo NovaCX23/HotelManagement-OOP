@@ -17,14 +17,14 @@ void Hotel::addBooking(const Booking& booking) {
 
 bool Hotel::cancelBooking(int roomNumber) {
     try {
-        Room* room = findRoomByNumber(roomNumber);  // validăm existența camerei
-
+        findRoomByNumber(roomNumber);
         std::cout << "Do you want to see all bookings for room " << roomNumber << "? (y/n): ";
         char seeDetails;
         std::cin >> seeDetails;
         if (seeDetails == 'y' || seeDetails == 'Y') {
             displayBookingsForRoom(roomNumber);
         }
+
         std::string targetDate;
         std::cout << "Enter the check-in date of the booking to cancel (YYYY-MM-DD): ";
         std::cin >> targetDate;
@@ -33,7 +33,7 @@ bool Hotel::cancelBooking(int roomNumber) {
             if (i->getRoom().getNumber() == roomNumber && i->getCheckIn() == targetDate) {
                 std::cout << "Booking found:\n";
                 std::cout << *i << "\n";
-                std::cout << "Are you sure you want to cancel it? (y/n)";
+                std::cout << "Are you sure you want to cancel it? (y/n): ";
 
                 char confirm;
                 std::cin >> confirm;
@@ -41,13 +41,13 @@ bool Hotel::cancelBooking(int roomNumber) {
                     bookings.erase(i);
                     std::cout << "Booking successfully cancelled.\n";
                     return true;
-                }
-                else {
+                } else {
                     std::cout << "Operation aborted.\n";
                     return false;
                 }
             }
         }
+
         std::cout << "No bookings with that check-in date found for room " << roomNumber << ".\n";
         return false;
     }
@@ -55,8 +55,8 @@ bool Hotel::cancelBooking(int roomNumber) {
         std::cout << e.what() << std::endl;
         return false;
     }
-
 }
+
 
 
 const std::vector<Booking>& Hotel::getAllBookings() const {
