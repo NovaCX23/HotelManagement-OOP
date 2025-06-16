@@ -35,7 +35,7 @@ public:
 
 class InvalidDateFormatException : public Exceptions {
 public:
-	InvalidDateFormatException(const std::string& date)
+	explicit InvalidDateFormatException(const std::string& date)
 		: Exceptions("Invalid date format: " + date + ". Use YYYY-MM-DD.") {}
 };
 

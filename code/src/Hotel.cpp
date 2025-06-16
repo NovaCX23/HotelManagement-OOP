@@ -16,38 +16,46 @@ void Hotel::addBooking(const Booking& booking) {
 }
 
 bool Hotel::cancelBooking(int roomNumber) {
-    std::cout << "Do you want to see all bookings for room " << roomNumber << "? (y/n): ";
-    char seeDetails;
-    std::cin >> seeDetails;
-    if (seeDetails == 'y' || seeDetails == 'Y') {
-        displayBookingsForRoom(roomNumber);
-    }
-    std::string targetDate;
-    std::cout << "Enter the check-in date of the booking to cancel (YYYY-MM-DD): ";
-    std::cin >> targetDate;
+    try {
+        Room* room = findRoomByNumber(roomNumber);  // validăm existența camerei
 
-    for (auto i = bookings.begin(); i != bookings.end(); ++i) {
-        if (i->getRoom().getNumber() == roomNumber && i->getCheckIn() == targetDate) {
-            std::cout << "Booking found:\n";
-            std::cout << *i << "\n";
-            std::cout << "Are you sure you want to cancel it? (y/n)";
+        std::cout << "Do you want to see all bookings for room " << roomNumber << "? (y/n): ";
+        char seeDetails;
+        std::cin >> seeDetails;
+        if (seeDetails == 'y' || seeDetails == 'Y') {
+            displayBookingsForRoom(roomNumber);
+        }
+        std::string targetDate;
+        std::cout << "Enter the check-in date of the booking to cancel (YYYY-MM-DD): ";
+        std::cin >> targetDate;
 
-            char confirm;
-            std::cin >> confirm;
-            if (confirm == 'y' || confirm == 'Y') {
-                bookings.erase(i);
-                std::cout << "Booking successfully cancelled.\n";
-                return true;
-            }
-            else {
-                std::cout << "Operation aborted.\n";
-                return false;
+        for (auto i = bookings.begin(); i != bookings.end(); ++i) {
+            if (i->getRoom().getNumber() == roomNumber && i->getCheckIn() == targetDate) {
+                std::cout << "Booking found:\n";
+                std::cout << *i << "\n";
+                std::cout << "Are you sure you want to cancel it? (y/n)";
+
+                char confirm;
+                std::cin >> confirm;
+                if (confirm == 'y' || confirm == 'Y') {
+                    bookings.erase(i);
+                    std::cout << "Booking successfully cancelled.\n";
+                    return true;
+                }
+                else {
+                    std::cout << "Operation aborted.\n";
+                    return false;
+                }
             }
         }
+        std::cout << "No bookings with that check-in date found for room " << roomNumber << ".\n";
+        return false;
+    }
+    catch (const RoomNotFoundException& e) {
+        std::cout << e.what() << std::endl;
+        return false;
     }
 
-    std::cout << "No bookings with that check-in date found for room " << roomNumber << ".\n";
-    return false;
 }
 
 

@@ -22,8 +22,6 @@ public:
 
 
 
-    const std::string getCompanyName() const { return companyName; }
-    int getNrEmployees() const { return nrEmployees; }
     std::string getSummary() const;
 };
 
