@@ -26,7 +26,6 @@ public:
 		return os.str();
 	}
 	double estimatedProfit() const;
-	int getFollowerCount() const;
 
 	std::shared_ptr<Guest> clone() const override;
 	bool isValidId() const override;

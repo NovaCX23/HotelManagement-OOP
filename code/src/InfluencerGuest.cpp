@@ -6,12 +6,20 @@ std::string InfluencerGuest::getType() const {
 }
 
 double InfluencerGuest::guestDiscount(int nights) const {
-	if (followerCount >= 100000)
-		return 0.25;
-	else if (followerCount >= 50000)
-		return 0.20;
-	else
-		return 0.15;
+		double discount = 0.0;
+		if (followerCount >= 100000)
+			discount = 0.25;
+		else if (followerCount >= 50000)
+			discount = 0.20;
+		else
+			discount = 0.15;
+
+		// extra bonus dacă stă mai mult
+		if (nights >= 5)
+			discount += 0.05;
+
+		return discount;
+
 }
 
 std::map<std::string, double> InfluencerGuest::getAvailableBenefits() const {
@@ -32,9 +40,6 @@ double InfluencerGuest::estimatedProfit() const {
 	return followerCount * profitPerFollower;
 }
 
-int InfluencerGuest::getFollowerCount() const {
-	return followerCount;
-}
 
 bool InfluencerGuest::isValidId() const {
 	return id.substr(0, 3) == "INF" && Guest::isValidId();
