@@ -25,7 +25,7 @@ public:
     void displayBookingsForRoom(int roomNumber) const;
     void displayAllBookings() const;
 
-    [[nodiscard]] bool isRoomAvailable(int roomNumber, const std::string& date, int nights) const;
+	bool isRoomAvailable(int roomNumber, const std::string& date, int nights) const;
     [[nodiscard]] std::pair<std::string, std::string> findNextAvailablePeriod(int roomNumber, const std::string& checkIn, int nights) const;
 
     // Guests

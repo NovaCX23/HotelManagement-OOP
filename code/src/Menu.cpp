@@ -65,10 +65,7 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
 
         switch (choice) {
             case 1: { // Add booking
-                std::string guestName, guestId, checkInDate, roomType;
-                int nights;
-
-                // Guest
+                std::string guestName, guestId;
                 std::cout << "Enter guest name: ";
                 std::getline(std::cin >> std::ws, guestName);
                 std::cout << "Enter guest id: ";
@@ -79,9 +76,12 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
 
                     // Room type
                     std::cout << "Enter desired room type (Standard/Deluxe/Suite): ";
+                    std::string roomType;
                     std::cin >> roomType;
 
                     std::cout << "Enter check-in date (YYYY-MM-DD) and number of nights: ";
+                    std::string checkInDate;
+                    int nights;
                     std::cin >> checkInDate >> nights;
                     std::cin.get();
 
