@@ -93,7 +93,7 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                     }
 
                     // Try to find available room directly
-                    const Room* availableRoom = hotel.findAvailableRoomByType(roomType, checkInDate, nights);
+                    const Room* availableRoom = hotel.findAvailableRoomByType(roomType);
                     if (availableRoom) {
                         Room room = *availableRoom;
                         hotel.addBooking(Booking(room, guest->clone(), checkInDate, nights));

@@ -214,7 +214,7 @@ Room* Hotel::findRoomByNumber(int roomNumber) {
     throw RoomNotFoundException(roomNumber);
 }
 
-Room* Hotel::findAvailableRoomByType(const std::string& type, const std::string& checkIn, int nights) {
+Room* Hotel::findAvailableRoomByType(const std::string& type) {
     for (auto& room : rooms) {
         if (room.getType() == type) {
             return &room;

@@ -35,7 +35,7 @@ public:
     // Rooms
     const std::vector<Room>& getAllRooms() const;
     Room* findRoomByNumber(int roomNumber);
-    Room* findAvailableRoomByType(const std::string& type, const std::string& checkIn, int nights);
+    Room* findAvailableRoomByType(const std::string& type);
 
     // CSV
     void saveBookingsToCSV(const std::string& filename) const;
