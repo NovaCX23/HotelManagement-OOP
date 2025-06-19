@@ -71,7 +71,6 @@ std::string Booking::toCSV() const {
 
 Booking Booking::fromCSV(const std::string& csvLine, const std::vector<Room>& rooms) {
     std::istringstream iss(csvLine);
-    std::string token;
 
     int roomNumber = 0;
     std::string roomType;
@@ -81,16 +80,18 @@ Booking Booking::fromCSV(const std::string& csvLine, const std::vector<Room>& ro
     int nights = 1;
 
     try {
-        if (std::getline(iss, token, ',')) roomNumber = std::stoi(token);
-        if (std::getline(iss, roomType, ','));
-        if (std::getline(iss, guestName, ','));
-        if (std::getline(iss, guestId, ','));
-        if (std::getline(iss, checkIn, ','));
-        if (std::getline(iss, token, ',')) nights = std::stoi(token);
+        std::string token;
+        std::getline(iss, token, ','); roomNumber = std::stoi(token);
+        std::getline(iss, roomType, ',');
+        std::getline(iss, guestName, ',');
+        std::getline(iss, guestId, ',');
+        std::getline(iss, checkIn, ',');
+        std::getline(iss, token, ','); nights = std::stoi(token);
     }
     catch (const std::exception& e) {
         std::cerr << "Error parsing booking CSV: " << e.what() << "\n";
     }
+
 
     auto it = std::find_if(rooms.begin(), rooms.end(), [roomNumber](const Room& r) {
         return r.getNumber() == roomNumber;
