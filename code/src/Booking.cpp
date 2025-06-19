@@ -73,13 +73,13 @@ Booking Booking::fromCSV(const std::string& csvLine, const std::vector<Room>& ro
     std::istringstream iss(csvLine);
 
     int roomNumber = 0;
-    std::string roomType;
     std::string guestName = "Unknown";
     std::string guestId = "XXX000";
     std::string checkIn = "2025-01-01";
     int nights = 1;
 
     try {
+        std::string roomType;
         std::string token;
         std::getline(iss, token, ','); roomNumber = std::stoi(token);
         std::getline(iss, roomType, ',');
