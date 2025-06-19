@@ -74,6 +74,7 @@ Booking Booking::fromCSV(const std::string& csvLine, const std::vector<Room>& ro
     std::string token;
 
     int roomNumber = 0;
+    std::string roomType;
     std::string guestName = "Unknown";
     std::string guestId = "XXX000";
     std::string checkIn = "2025-01-01";
@@ -81,9 +82,10 @@ Booking Booking::fromCSV(const std::string& csvLine, const std::vector<Room>& ro
 
     try {
         if (std::getline(iss, token, ',')) roomNumber = std::stoi(token);
-        if (std::getline(iss, token, ',')) guestName = token;
-        if (std::getline(iss, token, ',')) guestId = token;
-        if (std::getline(iss, token, ',')) checkIn = token;
+        if (std::getline(iss, roomType, ','));
+        if (std::getline(iss, guestName, ','));
+        if (std::getline(iss, guestId, ','));
+        if (std::getline(iss, checkIn, ','));
         if (std::getline(iss, token, ',')) nights = std::stoi(token);
     }
     catch (const std::exception& e) {
@@ -99,10 +101,12 @@ Booking Booking::fromCSV(const std::string& csvLine, const std::vector<Room>& ro
     }
 
     Room roomFinal = *it;
-
     auto guest = Guest::createFromCSV(guestName, guestId);
+
+    ++totalBookings; // sincronizam corect numărul de bookinguri
     return Booking(roomFinal, guest, checkIn, nights);
 }
+
 
 
 
