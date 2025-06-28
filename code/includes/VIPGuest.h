@@ -2,6 +2,7 @@
 #define VIPGUEST_H
 
 #include "Guest.h"
+#include "GuestFactory.h"
 
 class VIPGuest : public Guest {
     std::string tier;

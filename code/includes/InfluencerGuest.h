@@ -2,6 +2,7 @@
 #define INFLUENCERGUEST_H
 
 #include "Guest.h"
+#include "GuestFactory.h"
 #include<sstream>
 
 class InfluencerGuest : public Guest {

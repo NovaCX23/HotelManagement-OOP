@@ -37,9 +37,6 @@ public:
 
     // functions
     void displayBenefits() const;
-    static std::shared_ptr<Guest> createFromInput(const std::string& name, const std::string& id);
-    static std::shared_ptr<Guest> createFromCSV(const std::string& name, const std::string& id);
-    static std::vector<std::string> split(const std::string& s, char delim);
 
 
     // Operators

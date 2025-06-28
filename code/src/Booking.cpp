@@ -1,4 +1,5 @@
 #include "../includes/Booking.h"
+#include "../includes/GuestFactory.h""
 #include "../includes/Exceptions.h"
 #include <string>
 #include <ctime>
@@ -102,9 +103,8 @@ Booking Booking::fromCSV(const std::string& csvLine, const std::vector<Room>& ro
     }
 
     Room roomFinal = *it;
-    auto guest = Guest::createFromCSV(guestName, guestId);
+    auto guest = GuestFactory::createFromCSV(guestName, guestId);
 
-    ++totalBookings; // sincronizam corect numărul de bookinguri
     return Booking(roomFinal, guest, checkIn, nights);
 }
 

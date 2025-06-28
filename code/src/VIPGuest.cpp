@@ -60,7 +60,7 @@ std::shared_ptr<Guest> VIPGuest::createFromInput(const std::string& name, const 
 }
 
 std::shared_ptr<Guest> VIPGuest::createFromCSV(const std::string& name, const std::string& fullId) {
-    auto parts = split(fullId, '|');
+    auto parts = GuestFactory::split(fullId, '|');
     std::string raw_id = parts[0];
     std::string tier = (parts.size() >= 2) ? parts[1] : "Bronze";
     auto guest = std::make_shared<VIPGuest>(name, raw_id, tier);

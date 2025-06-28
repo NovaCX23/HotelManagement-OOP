@@ -33,3 +33,6 @@ int main() {
 //    exit ul din program nu e un exit real
 
 // TODO: Posibile probleme cu csv-ul, gen rezervari pe aceeasi data
+//   O problema pe care nu cred ca o sa apuc sa o implementez este ca daca dau load dupa ce am adaugat deja
+//  niste booking uri o sa le dea clear ,
+//   Alta chestie e sa modific ceva ca sa se reflecte real modificarile facute pe bookings.csv

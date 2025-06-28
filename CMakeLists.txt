@@ -70,6 +70,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         code/includes/Exceptions.h
         code/includes/InfluencerGuest.h
         code/src/InfluencerGuest.cpp
+        code/includes/GuestFactory.h
+        code/src/GuestFactory.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

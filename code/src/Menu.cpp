@@ -8,10 +8,7 @@
 #include "../includes/Room.h"
 #include "../includes/Booking.h"
 #include "../includes/Guest.h"
-#include "../includes/VIPGuest.h"
-#include "../includes/CorporateGuest.h"
-#include "../includes/EventGuest.h"
-#include "../includes/InfluencerGuest.h"
+#include "../includes/GuestFactory.h""
 
 bool isValidDateFormat(const std::string& date) {
     return date.size() == 10 && date[4] == '-' && date[7] == '-';
@@ -73,7 +70,7 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                 std::cin >> guestId;
 
                 try{
-                    auto guest = Guest::createFromInput(guestName, guestId);
+                    auto guest = GuestFactory::createFromInput(guestName, guestId);
 
                     // Room type
                     std::cout << "Enter desired room type (Standard/Deluxe/Suite): ";

@@ -100,7 +100,7 @@ std::shared_ptr<Guest> EventGuest::createFromInput(const std::string& name, cons
 }
 
 std::shared_ptr<Guest> EventGuest::createFromCSV(const std::string& name, const std::string& fullId) {
-    auto parts = split(fullId, '|');
+    auto parts = GuestFactory::split(fullId, '|');
     std::string raw_id = parts[0];
     std::string eventName = (parts.size() >= 2) ? parts[1] : "Event";
     int expectedGuests = (parts.size() >= 3) ? std::stoi(parts[2]) : 1;

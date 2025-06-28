@@ -2,6 +2,7 @@
 #define EVENTGUEST_H
 
 #include "Guest.h"
+#include "GuestFactory.h"
 
 class EventGuest : public Guest {
     std::string eventName;

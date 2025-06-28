@@ -88,7 +88,7 @@ std::shared_ptr<Guest> CorporateGuest::createFromInput(const std::string& name, 
 }
 
 std::shared_ptr<Guest> CorporateGuest::createFromCSV(const std::string& name, const std::string& fullId) {
-    auto parts = split(fullId, '|');
+    auto parts = GuestFactory::split(fullId, '|');
     std::string raw_id = parts[0];
     std::string company = (parts.size() >= 2) ? parts[1] : "Unknown";
     int employees = (parts.size() >= 3) ? std::stoi(parts[2]) : 1;

@@ -88,17 +88,6 @@ std::vector<std::string> Guest::excludedBenefits() const{
 
 // Functions
 
-std::vector<std::string> Guest::split(const std::string& s, char delim) {
-    std::vector<std::string> out;
-    std::string temp;
-    for (char c : s) {
-        if (c == delim) { out.push_back(temp); temp.clear(); }
-        else temp += c;
-    }
-    out.push_back(temp);
-    return out;
-}
-
 void Guest::displayBenefits() const {
     auto benefits = getAvailableBenefits();
     if (benefits.empty()) {
@@ -129,45 +118,6 @@ void Guest::displayBenefits() const {
     }
 }
 
-std::shared_ptr<Guest> Guest::createFromInput(const std::string& name, const std::string& id) {
-    if (id.starts_with("VIP"))
-        return VIPGuest::createFromInput(name, id);
-    else if (id.starts_with("COR"))
-        return CorporateGuest::createFromInput(name, id);
-    else if (id.starts_with("EVT"))
-        return EventGuest::createFromInput(name, id);
-    else if (id.starts_with("INF"))
-        return InfluencerGuest::createFromInput(name, id);
-
-    // Default: standard guest
-    auto guest = std::make_shared<Guest>(name, id);
-    if (!guest->isValidId()) {
-        throw InvalidGuestIdException(id);
-    }
-    return guest;
-
-}
-
-std::shared_ptr<Guest> Guest::createFromCSV(const std::string& name, const std::string& id) {
-    auto parts = split(id, '|');
-    std::string raw_id = parts[0];
-
-    if (raw_id.rfind("VIP", 0) == 0)
-        return VIPGuest::createFromCSV(name, id);
-    else if (raw_id.rfind("COR", 0) == 0)
-        return CorporateGuest::createFromCSV(name, id);
-    else if (raw_id.rfind("EVT", 0) == 0)
-        return EventGuest::createFromCSV(name, id);
-    else if (raw_id.rfind("INF", 0) == 0)
-        return InfluencerGuest::createFromCSV(name, id);
-
-    // Standard guest
-    auto guest = std::make_shared<Guest>(name, raw_id);
-    if (!guest->isValidId())
-        throw InvalidGuestIdException(raw_id);
-    return guest;
-
-}
 
  std::shared_ptr<Guest>Guest::clone() const {
     return std::make_shared<Guest>(*this);

@@ -267,12 +267,12 @@ void Hotel::saveBookingsToCSV(const std::string& filename) const {
     fout.close();
 }
 void Hotel::loadBookingsFromCSV(const std::string& filename) {
+    bookings.clear();
     std::ifstream fin(filename);
     if (!fin.is_open()) {
         std::cerr << "Error opening file for reading: " << filename << "\n";
         return;
     }
-    bookings.clear();
     std::string line;
     while (std::getline(fin, line)) {
         if (line.empty()) continue;

@@ -2,6 +2,7 @@
 #define CORPORATEGUEST_H
 
 #include "Guest.h"
+#include "GuestFactory.h"
 
 class CorporateGuest : public Guest {
     std::string companyName;

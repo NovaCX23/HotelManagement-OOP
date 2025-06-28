@@ -75,7 +75,7 @@ std::shared_ptr<Guest> InfluencerGuest::createFromInput(const std::string& name,
 }
 
 std::shared_ptr<Guest> InfluencerGuest::createFromCSV(const std::string& name, const std::string& fullId) {
-	auto parts = split(fullId, '|');
+	auto parts = GuestFactory::split(fullId, '|');
 	std::string raw_id = parts[0];
 	int followers = (parts.size() >= 2) ? std::stoi(parts[1]) : 0;
 
