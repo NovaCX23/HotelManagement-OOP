@@ -1,5 +1,5 @@
 #include "../includes/Booking.h"
-#include "../includes/GuestFactory.h""
+#include "../includes/GuestFactory.h"
 #include "../includes/Exceptions.h"
 #include <string>
 #include <ctime>
