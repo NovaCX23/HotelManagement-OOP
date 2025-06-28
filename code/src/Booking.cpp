@@ -18,8 +18,7 @@ Booking::Booking(const Room& room, std::shared_ptr<Guest> guest, const std::stri
 }
 
 Booking::Booking(const Booking& other)
-    : room(other.room), checkIn(other.checkIn), nights(other.nights) {
-    guest = other.guest->clone();
+    : room(other.room), guest(other.guest->clone()), checkIn(other.checkIn), nights(other.nights) {
 }
 
 // Getters
