@@ -17,8 +17,8 @@ Booking::Booking(const Room& room, std::shared_ptr<Guest> guest, const std::stri
 }
 
 Booking::Booking(const Booking& other)
-    : room(other.room), guest(other.guest), checkIn(other.checkIn), nights(other.nights) {
-    //std::cout << "Booking copied\n";
+    : room(other.room), checkIn(other.checkIn), nights(other.nights) {
+    guest = other.guest->clone();
 }
 
 // Getters
@@ -115,7 +115,7 @@ Booking Booking::fromCSV(const std::string& csvLine, const std::vector<Room>& ro
 Booking& Booking::operator=(const Booking& other) {
     if (this != &other) {
         room = other.getRoom();
-        guest = other.getGuest();
+        guest = other.getGuest()->clone();
         checkIn = other.getCheckIn();
         nights = other.getNights();
     }

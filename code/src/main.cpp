@@ -5,7 +5,7 @@
 int main() {
     try {
         Hotel hotel;
-        hotel.loadRoomsFromCSV("../data/rooms.csv");
+        hotel.loadRoomsFromCSV("data/rooms.csv");
         Menu::RunInteractiveMenu(hotel);
     }
     catch (const Exceptions& e) {
@@ -30,6 +30,6 @@ int main() {
 //    functionalitate in hotel pt FullHotelBooking
 //    update guest dependent stuff obv :))
 //    discount for guest trebuie sa stie deja cate nopti sta guest ul
-
+//    exit ul din program nu e un exit real
 
 // TODO: Posibile probleme cu csv-ul, gen rezervari pe aceeasi data

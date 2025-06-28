@@ -15,6 +15,11 @@ public:
     bool isValidId() const override;
     std::string getFullId() const override;
     std::shared_ptr<Guest> clone() const override;
+    std::string getSummary() const override;
+
+    //parsing
+    static std::shared_ptr<Guest> createFromInput(const std::string& name, const std::string& id);
+    static std::shared_ptr<Guest> createFromCSV(const std::string& name, const std::string& fullId);
 
 };
 

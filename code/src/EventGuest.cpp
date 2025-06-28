@@ -74,3 +74,42 @@ std::string EventGuest::getSummary() const {
 std::shared_ptr<Guest> EventGuest::clone() const {
     return std::make_shared<EventGuest>(*this);
 }
+
+// Parsing
+std::shared_ptr<Guest> EventGuest::createFromInput(const std::string& name, const std::string& id) {
+    std::string eventName;
+    int expectedGuests, eventDays;
+    char catering;
+    bool isCatered;
+
+    std::cout << "Enter event name: ";
+    std::getline(std::cin >> std::ws, eventName);
+    std::cout << "Expected number of guests: ";
+    std::cin >> expectedGuests;
+    std::cout << "Event duration (days): ";
+    std::cin >> eventDays;
+    std::cout << "Is catering included? (y/n): ";
+    std::cin >> catering;
+    isCatered = (catering == 'y' || catering == 'Y');
+
+    auto guest = std::make_shared<EventGuest>(name, id, eventName, expectedGuests, eventDays, isCatered);
+    if (!guest->isValidId()) {
+        throw InvalidGuestIdException(id);
+    }
+    return guest;
+}
+
+std::shared_ptr<Guest> EventGuest::createFromCSV(const std::string& name, const std::string& fullId) {
+    auto parts = split(fullId, '|');
+    std::string raw_id = parts[0];
+    std::string eventName = (parts.size() >= 2) ? parts[1] : "Event";
+    int expectedGuests = (parts.size() >= 3) ? std::stoi(parts[2]) : 1;
+    int eventDays = (parts.size() >= 4) ? std::stoi(parts[3]) : 1;
+    bool isCatered = (parts.size() >= 5) ? (parts[4] == "1" || parts[4] == "y" || parts[4] == "true") : false;
+
+    auto guest = std::make_shared<EventGuest>(name, raw_id, eventName, expectedGuests, eventDays, isCatered);
+    if (!guest->isValidId()) {
+        throw InvalidGuestIdException(raw_id);
+    }
+    return guest;
+}

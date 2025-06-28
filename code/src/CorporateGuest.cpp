@@ -69,3 +69,33 @@ std::string CorporateGuest::getSummary() const {
 std::shared_ptr<Guest> CorporateGuest::clone() const {
     return std::make_shared<CorporateGuest>(*this);
 }
+
+
+// Parsing
+std::shared_ptr<Guest> CorporateGuest::createFromInput(const std::string& name, const std::string& id) {
+    std::string companyName;
+    int nrEmployees;
+    std::cout << "Enter company name: ";
+    std::getline(std::cin >> std::ws, companyName);
+    std::cout << "Enter number of employees: ";
+    std::cin >> nrEmployees;
+
+    auto guest = std::make_shared<CorporateGuest>(name, id, companyName, nrEmployees);
+    if (!guest->isValidId()) {
+        throw InvalidGuestIdException(id);
+    }
+    return guest;
+}
+
+std::shared_ptr<Guest> CorporateGuest::createFromCSV(const std::string& name, const std::string& fullId) {
+    auto parts = split(fullId, '|');
+    std::string raw_id = parts[0];
+    std::string company = (parts.size() >= 2) ? parts[1] : "Unknown";
+    int employees = (parts.size() >= 3) ? std::stoi(parts[2]) : 1;
+
+    auto guest = std::make_shared<CorporateGuest>(name, raw_id, company, employees);
+    if (!guest->isValidId()) {
+        throw InvalidGuestIdException(raw_id);
+    }
+    return guest;
+}

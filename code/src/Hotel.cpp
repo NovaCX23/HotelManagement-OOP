@@ -263,6 +263,8 @@ void Hotel::saveBookingsToCSV(const std::string& filename) const {
     for (const auto& booking : bookings) {
         fout << booking.toCSV() << "\n";
     }
+
+    fout.close();
 }
 void Hotel::loadBookingsFromCSV(const std::string& filename) {
     std::ifstream fin(filename);

@@ -52,4 +52,36 @@ std::shared_ptr<Guest> InfluencerGuest::clone() const {
 std::string InfluencerGuest::getFullId() const {
 	return id + "|" + std::to_string(followerCount);
 }
+std::string InfluencerGuest::getSummary() const {
+	std::ostringstream os;
+	os << "Influencer Guest - " << name << " (" << id << ")\n";
+	os << "Followers: " << followerCount << "\n";
+	os << "Estimated indirect profit: $" << estimatedProfit();
+	return os.str();
+}
 
+
+// Parsing
+std::shared_ptr<Guest> InfluencerGuest::createFromInput(const std::string& name, const std::string& id) {
+	int followers;
+	std::cout << "Enter number of followers: ";
+	std::cin >> followers;
+
+	auto guest = std::make_shared<InfluencerGuest>(name, id, followers);
+	if (!guest->isValidId()) {
+		throw InvalidGuestIdException(id);
+	}
+	return guest;
+}
+
+std::shared_ptr<Guest> InfluencerGuest::createFromCSV(const std::string& name, const std::string& fullId) {
+	auto parts = split(fullId, '|');
+	std::string raw_id = parts[0];
+	int followers = (parts.size() >= 2) ? std::stoi(parts[1]) : 0;
+
+	auto guest = std::make_shared<InfluencerGuest>(name, raw_id, followers);
+	if (!guest->isValidId()) {
+		throw InvalidGuestIdException(raw_id);
+	}
+	return guest;
+}

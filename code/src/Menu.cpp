@@ -235,7 +235,7 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                 std::string filename;
                 std::cout << "Enter filename to save: (bookings.csv) ";
                 std::cin >> filename;
-                hotel.saveBookingsToCSV("../data/" + filename);
+                hotel.saveBookingsToCSV("data/" + filename);
                 std::cout << "Bookings saved successfully to " << filename << "\n";
                 break;
             }
@@ -243,7 +243,7 @@ void Menu::displayBookingsMenu(Hotel& hotel) {
                 std::string filename;
                 std::cout << "Enter filename to load: (bookings.csv) ";
                 std::cin >> filename;
-                hotel.loadBookingsFromCSV("../data/" + filename);
+                hotel.loadBookingsFromCSV("data/" + filename);
                 std::cout << "Bookings loaded successfully from " << filename << "\n";
                 break;
             }
@@ -335,24 +335,9 @@ void Menu::displayGuestsMenu(const Hotel& hotel) {
                 std::cout << "\n--- Guest Details ---\n";
                 std::cout << "Name: " << guest->getName() << "\n";
                 std::cout << "ID: " << guest->getId() << "\n";
-                std::cout << "Type: " << guest->getType() << "\n";
 
-                // Folosim dynamic_cast doar dacă avem nevoie de informații suplimentare
-                if (auto corp = std::dynamic_pointer_cast<CorporateGuest>(guest)) {
-                    std::cout << corp->getSummary() << "\n";
-                }
-                else if (auto event = std::dynamic_pointer_cast<EventGuest>(guest)) {
-                    std::cout << event->getSummary() << "\n";
-                }
-                else if (auto vip = std::dynamic_pointer_cast<VIPGuest>(guest)) {
-                    std::cout << "Tier: " << vip->getType() << "\n";
-                }
-                else if (auto influencer = std::dynamic_pointer_cast<InfluencerGuest>(guest)) {
-                    std::cout << influencer->getSummary() << "\n";
-                }
-                else {
-                    std::cout << "Standard Guest\n";
-                }
+                std::cout << guest->getSummary() << "\n";
+
 
                 std::cout << "\nFree Benefits:\n";
                 auto freeBenefits = guest->getFreeBenefits();

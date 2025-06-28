@@ -50,6 +50,12 @@ std::string Guest::getFullId() const {
 std::string Guest::getType() const {
     return "Standard";
 }
+std::string Guest::getSummary() const {
+    return "Standard guest with no special benefits.";
+}
+
+
+
 
 double Guest::guestDiscount(int nights) const {
     return (nights >= 5) ? 0.05 : 0.0;
@@ -82,6 +88,17 @@ std::vector<std::string> Guest::excludedBenefits() const{
 
 // Functions
 
+std::vector<std::string> Guest::split(const std::string& s, char delim) {
+    std::vector<std::string> out;
+    std::string temp;
+    for (char c : s) {
+        if (c == delim) { out.push_back(temp); temp.clear(); }
+        else temp += c;
+    }
+    out.push_back(temp);
+    return out;
+}
+
 void Guest::displayBenefits() const {
     auto benefits = getAvailableBenefits();
     if (benefits.empty()) {
@@ -113,66 +130,14 @@ void Guest::displayBenefits() const {
 }
 
 std::shared_ptr<Guest> Guest::createFromInput(const std::string& name, const std::string& id) {
-    if (id.starts_with("VIP")) {
-        std::string tier;
-        std::cout << "Enter VIP tier (Bronze/Silver/Gold): ";
-        std::cin >> tier;
-        auto guest = std::make_shared<VIPGuest>(name, id, tier);
-        if (!guest->isValidId()) {
-            throw InvalidGuestIdException(id);
-        }
-        return guest;
-
-
-    } else if (id.starts_with("COR")) {
-        std::string companyName;
-        int nrEmployees;
-        std::cout << "Enter company name: ";
-        std::getline(std::cin >> std::ws, companyName);
-        std::cout << "Enter number of employees: ";
-        std::cin >> nrEmployees;
-        auto guest = std::make_shared<CorporateGuest>(name, id, companyName, nrEmployees);
-        if (!guest->isValidId()) {
-            throw InvalidGuestIdException(id);
-        }
-        return guest;
-
-
-    } else if (id.starts_with("EVT")) {
-        std::string eventName;
-        int expectedGuests, eventDays;
-        char catering;
-        bool isCatered;
-        std::cout << "Enter event name: ";
-        std::getline(std::cin >> std::ws, eventName);
-        std::cout << "Expected number of guests: ";
-        std::cin >> expectedGuests;
-        std::cout << "Event duration (days): ";
-        std::cin >> eventDays;
-        std::cout << "Is catering included? (y/n): ";
-        std::cin >> catering;
-        isCatered = (catering == 'y' || catering == 'Y');
-        auto guest = std::make_shared<EventGuest>(name, id, eventName, expectedGuests, eventDays, isCatered);
-        if (!guest->isValidId()) {
-            throw InvalidGuestIdException(id);
-        }
-        return guest;
-
-    }
-
-    else if (id.starts_with("INF")) {
-        int followers;
-        std::cout << "Enter number of followers: ";
-        std::cin >> followers;
-
-        auto guest = std::make_shared<InfluencerGuest>(name, id, followers);
-        if (!guest->isValidId()) {
-            throw InvalidGuestIdException(id);
-        }
-        return guest;
-    }
-
-
+    if (id.starts_with("VIP"))
+        return VIPGuest::createFromInput(name, id);
+    else if (id.starts_with("COR"))
+        return CorporateGuest::createFromInput(name, id);
+    else if (id.starts_with("EVT"))
+        return EventGuest::createFromInput(name, id);
+    else if (id.starts_with("INF"))
+        return InfluencerGuest::createFromInput(name, id);
 
     // Default: standard guest
     auto guest = std::make_shared<Guest>(name, id);
@@ -184,54 +149,17 @@ std::shared_ptr<Guest> Guest::createFromInput(const std::string& name, const std
 }
 
 std::shared_ptr<Guest> Guest::createFromCSV(const std::string& name, const std::string& id) {
-    // Split id după '|'
-    auto split = [](const std::string& s, char delim) {
-        std::vector<std::string> out;
-        std::string temp;
-        for (char c : s) {
-            if (c == delim) { out.push_back(temp); temp.clear(); }
-            else temp += c;
-        }
-        out.push_back(temp);
-        return out;
-    };
-
     auto parts = split(id, '|');
-    const std::string& raw_id = parts[0];
+    std::string raw_id = parts[0];
 
-    if (raw_id.rfind("VIP", 0) == 0) {
-        std::string tier = (parts.size() >= 2 && !parts[1].empty()) ? parts[1] : "Bronze";
-        auto guest = std::make_shared<VIPGuest>(name, raw_id, tier);
-        if (!guest->isValidId())
-            throw InvalidGuestIdException(raw_id);
-        return guest;
-
-    } else if (raw_id.rfind("COR", 0) == 0) {
-        std::string company = (parts.size() >= 2) ? parts[1] : "Unknown";
-        int employees = (parts.size() >= 3) ? std::stoi(parts[2]) : 1;
-        auto guest = std::make_shared<CorporateGuest>(name, raw_id, company, employees);
-        if (!guest->isValidId())
-            throw InvalidGuestIdException(raw_id);
-        return guest;
-
-    } else if (raw_id.rfind("EVT", 0) == 0) {
-        std::string eventName = (parts.size() >= 2) ? parts[1] : "Event";
-        int expectedGuests = (parts.size() >= 3) ? std::stoi(parts[2]) : 1;
-        int eventDays = (parts.size() >= 4) ? std::stoi(parts[3]) : 1;
-        bool isCatered = (parts.size() >= 5) ? (parts[4] == "1" || parts[4] == "y" || parts[4] == "true") : false;
-        auto guest = std::make_shared<EventGuest>(name, raw_id, eventName, expectedGuests, eventDays, isCatered);
-        if (!guest->isValidId())
-            throw InvalidGuestIdException(raw_id);
-        return guest;
-    }
-    else if (raw_id.rfind("INF", 0) == 0) {
-        int followers = (parts.size() >= 2) ? std::stoi(parts[1]) : 0;
-        auto guest = std::make_shared<InfluencerGuest>(name, raw_id, followers);
-        if (!guest->isValidId())
-            throw InvalidGuestIdException(raw_id);
-        return guest;
-    }
-
+    if (raw_id.rfind("VIP", 0) == 0)
+        return VIPGuest::createFromCSV(name, id);
+    else if (raw_id.rfind("COR", 0) == 0)
+        return CorporateGuest::createFromCSV(name, id);
+    else if (raw_id.rfind("EVT", 0) == 0)
+        return EventGuest::createFromCSV(name, id);
+    else if (raw_id.rfind("INF", 0) == 0)
+        return InfluencerGuest::createFromCSV(name, id);
 
     // Standard guest
     auto guest = std::make_shared<Guest>(name, raw_id);

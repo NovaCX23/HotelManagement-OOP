@@ -5,6 +5,7 @@
 #include<map>
 #include<vector>
 #include<memory>
+#include "../includes/Exceptions.h"
 
 class Guest {
 
@@ -26,6 +27,7 @@ public:
     virtual bool isValidId() const;
     virtual std::string getFullId() const;
     virtual std::string getType() const;
+    virtual std::string getSummary() const;
     virtual double guestDiscount(int nights) const;
     virtual std::map<std::string, double> getAvailableBenefits() const;
     virtual std::vector<std::string> excludedBenefits() const;
@@ -37,6 +39,8 @@ public:
     void displayBenefits() const;
     static std::shared_ptr<Guest> createFromInput(const std::string& name, const std::string& id);
     static std::shared_ptr<Guest> createFromCSV(const std::string& name, const std::string& id);
+    static std::vector<std::string> split(const std::string& s, char delim);
+
 
     // Operators
     friend std::ostream& operator<<(std::ostream& os, const Guest& guest);
