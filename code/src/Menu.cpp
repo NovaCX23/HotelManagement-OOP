@@ -8,7 +8,7 @@
 #include "../includes/Room.h"
 #include "../includes/Booking.h"
 #include "../includes/Guest.h"
-#include "../includes/GuestFactory.h""
+#include "../includes/GuestFactory.h"
 
 bool isValidDateFormat(const std::string& date) {
     return date.size() == 10 && date[4] == '-' && date[7] == '-';
