@@ -3,12 +3,8 @@
 #include <set>
 #include <map>
 
-#include "../includes/Exceptions.h"
 #include "../includes/Menu.h"
-#include "../includes/Room.h"
-#include "../includes/Booking.h"
-#include "../includes/Guest.h"
-#include "../includes/GuestFactory.h"
+
 
 bool isValidDateFormat(const std::string& date) {
     return date.size() == 10 && date[4] == '-' && date[7] == '-';
@@ -19,6 +15,7 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
         std::cout << "\n--- Hotel Management ---\n";
         std::cout << "1. Manage Bookings\n";
         std::cout << "2. Manage Guests\n";
+        std::cout << "3. Manage Analytics\n";
         std::cout << "0. Exit\n";
         std::cout << "Select an option: ";
 
@@ -34,11 +31,17 @@ void Menu::RunInteractiveMenu(Hotel& hotel) {
             case 2:
                 displayGuestsMenu(hotel);
             break;
-            case 0:
-                std::cout << "Exiting...\n";
+            case 3:
+                displayAnalyticsMenu(hotel);
             break;
-            default:
+            case 0: {
+                std::cout << "Exiting...\n";
+                return;
+            }
+            default: {
                 std::cout << "Invalid choice. Try again.\n";
+                break;
+            }
         }
     }
 }
@@ -261,7 +264,7 @@ void Menu::displayGuestsMenu(const Hotel& hotel) {
         std::cout << "2. Show benefits for guest (by ID)\n";
         std::cout << "3. Show discount for guest (by ID)\n";
         std::cout << "4. Show detailed guest summary (by ID)\n";
-        std::cout << "0. Back to Main Menu\n";
+        std::cout << "0. Back\n";
         std::cout << "Choose option: ";
 
         int option;
@@ -376,6 +379,74 @@ void Menu::displayGuestsMenu(const Hotel& hotel) {
                 std::cout << "Invalid option. Please try again.\n";
                 break;
             }
+        }
+    }
+}
+
+
+void Menu::displayAnalyticsMenu(Hotel& hotel) {
+    while (true) {
+        std::cout << "\n--- Hotel Analytics ---\n";
+        std::cout << "1. Show Total Profit\n";
+        std::cout << "2. Show Guest Report (by type)\n";
+        std::cout << "0. Back\n";
+        std::cout << "Choose option: ";
+
+        int choice;
+        if (!(std::cin >> choice)) {
+            std::cout << "Invalid input or end of input. Exiting...\n";
+            return;
+        }
+
+        switch (choice) {
+            case 1: {
+                if (!hotel.getProfitStrategy()) {
+                    hotel.setProfitStrategy(std::make_shared<SimpleProfitStrategy>());
+                }
+                double profit = hotel.getTotalProfit();
+                std::cout << "[INFO] Total hotel profit: $" << profit << "\n";
+                break;
+            }
+            case 2: {
+                std::string type;
+                std::cout << "Enter guest type (Standard/ VIP / Corporate / Event / Influencer): ";
+                std::cin >> type;
+
+                if (type == "VIP") {
+                    Report<VIPGuest> report;
+                    report.generate(hotel.getAllBookings());
+                } else if (type == "Corporate") {
+                    Report<CorporateGuest> report;
+                    report.generate(hotel.getAllBookings());
+                } else if (type == "Event") {
+                    Report<EventGuest> report;
+                    report.generate(hotel.getAllBookings());
+                } else if (type == "Influencer") {
+                    Report<InfluencerGuest> report;
+                    report.generate(hotel.getAllBookings());
+                } else if (type == "Standard") {
+                    int count = 0;
+                    std::cout << "\n--- Report for selected guest type ---\n";
+                    for (const auto& b : hotel.getAllBookings()) {
+                        auto g = b.getGuest();
+                        if (!std::dynamic_pointer_cast<VIPGuest>(g) &&
+                            !std::dynamic_pointer_cast<CorporateGuest>(g) &&
+                            !std::dynamic_pointer_cast<EventGuest>(g) &&
+                            !std::dynamic_pointer_cast<InfluencerGuest>(g)) {
+                                ++count;
+                            }
+                    }
+                    std::cout << "Total guests of selected type: " << count << "\n";
+                } else {
+                    std::cout << "Unknown type.\n";
+                }
+                break;
+            }
+            case 0:
+                return;
+            default:
+                std::cout << "Invalid option. Please try again.\n";
+            break;
         }
     }
 }

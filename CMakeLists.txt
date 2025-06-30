@@ -72,6 +72,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         code/src/InfluencerGuest.cpp
         code/includes/GuestFactory.h
         code/src/GuestFactory.cpp
+        code/includes/ProfitStrategy.h
+        code/includes/Report.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

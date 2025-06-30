@@ -2,6 +2,8 @@
 #define HOTEL_H
 
 #include "Booking.h"
+#include "ProfitStrategy.h"
+
 #include<iostream>
 #include <algorithm>
 #include <vector>
@@ -10,6 +12,7 @@
 class Hotel {
     std::vector<Booking> bookings;
     std::vector<Room> rooms;
+    std::shared_ptr<ProfitStrategy> profitStrategy;
 public:
     // Constructors
     Hotel() = default;
@@ -37,10 +40,17 @@ public:
     Room* findRoomByNumber(int roomNumber);
     Room* findRoomByType(const std::string& type);
 
+    // Profit
+    void setProfitStrategy(std::shared_ptr<ProfitStrategy> strategy);
+    std::shared_ptr<ProfitStrategy> getProfitStrategy() const;
+    double getTotalProfit() const;
+
+
     // CSV
     void saveBookingsToCSV(const std::string& filename) const;
     void loadBookingsFromCSV(const std::string& filename);
     void loadRoomsFromCSV(const std::string& filename);
+
 };
 
 #endif //HOTEL_H

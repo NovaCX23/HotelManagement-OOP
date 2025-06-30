@@ -223,6 +223,27 @@ Room* Hotel::findRoomByType(const std::string& type) {
     return nullptr;
 }
 
+// Profit
+void Hotel::setProfitStrategy(std::shared_ptr<ProfitStrategy> strategy) {
+    profitStrategy = std::move(strategy);
+}
+
+std::shared_ptr<ProfitStrategy> Hotel::getProfitStrategy() const {
+    return profitStrategy;
+}
+
+
+double Hotel::getTotalProfit() const {
+    if (!profitStrategy) return 0.0;
+
+    double total = 0.0;
+    for (const auto& booking : bookings) {
+        total += profitStrategy->computeProfit(booking);
+    }
+    return total;
+}
+
+
 // CSV
 void Hotel::loadRoomsFromCSV(const std::string& filename) {
     std::ifstream fin(filename);
