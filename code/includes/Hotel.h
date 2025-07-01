@@ -3,6 +3,7 @@
 
 #include "Booking.h"
 #include "ProfitStrategy.h"
+#include "VIPGuest.h"
 
 #include<iostream>
 #include <algorithm>
@@ -13,9 +14,14 @@ class Hotel {
     std::vector<Booking> bookings;
     std::vector<Room> rooms;
     std::shared_ptr<ProfitStrategy> profitStrategy;
+
+    // Profit adițional
+    double vipUpgradeProfit = 0.0;
+    double cancellationProfit = 0.0;
+    double extrasProfit = 0.0;
 public:
     // Constructors
-    Hotel() = default;
+    Hotel();
     Hotel(const Hotel& other) = default;
     Hotel& operator=(const Hotel& other) = default;
     ~Hotel() = default;
@@ -43,7 +49,15 @@ public:
     // Profit
     void setProfitStrategy(std::shared_ptr<ProfitStrategy> strategy);
     std::shared_ptr<ProfitStrategy> getProfitStrategy() const;
+    double getBookingProfit() const;
+    double getGrossBookingProfit() const;
     double getTotalProfit() const;
+
+    void addVIPProfit(double amount);
+    void addCancellationProfit(double amount);
+
+    double getVIPProfit() const;
+    double getCancellationProfit() const;
 
 
     // CSV

@@ -357,7 +357,7 @@ void Menu::displayGuestsMenu(const Hotel& hotel) {
                     std::cout << "\n--- Bookings ---\n";
                     for (const auto& booking : bookings) {
                         double discount = guest->guestDiscount(booking.getNights());
-                        double price = booking.getTotalPrice();
+                        double price = booking.getBookingPrice();
                         totalPaid += price;
 
                         std::cout << "Booking: Room " << booking.getRoom().getNumber()
@@ -387,7 +387,7 @@ void Menu::displayGuestsMenu(const Hotel& hotel) {
 void Menu::displayAnalyticsMenu(Hotel& hotel) {
     while (true) {
         std::cout << "\n--- Hotel Analytics ---\n";
-        std::cout << "1. Show Total Profit\n";
+        std::cout << "1. Show Total Profit Report\n";
         std::cout << "2. Show Guest Report (by type)\n";
         std::cout << "0. Back\n";
         std::cout << "Choose option: ";
@@ -400,13 +400,24 @@ void Menu::displayAnalyticsMenu(Hotel& hotel) {
 
         switch (choice) {
             case 1: {
-                if (!hotel.getProfitStrategy()) {
-                    hotel.setProfitStrategy(std::make_shared<SimpleProfitStrategy>());
-                }
-                double profit = hotel.getTotalProfit();
-                std::cout << "[INFO] Total hotel profit: $" << profit << "\n";
+                std::cout << "\n--- TOTAL PROFIT REPORT ---\n";
+
+                double gross = hotel.getGrossBookingProfit();
+                double booking = hotel.getBookingProfit();
+                double losses = gross - booking;
+                double net = hotel.getTotalProfit();
+
+                std::cout << "Gross Booking Profit (without losses): $" << gross << "\n";
+                std::cout << "Total Losses from Free Benefits:       -$" << losses << "\n";
+                std::cout << "---------------------------------------------\n";
+                std::cout << "Net Booking Profit (after losses):     $" << booking << "\n";
+                std::cout << "VIP Upgrade Profit:                    +$" << hotel.getVIPProfit() << "\n";
+                std::cout << "Cancellation Profit:                   +$" << hotel.getCancellationProfit() << "\n";
+                std::cout << "---------------------------------------------\n";
+                std::cout << "->  TOTAL NET PROFIT:                     $" << net << "\n";
                 break;
             }
+
             case 2: {
                 std::string type;
                 std::cout << "Enter guest type (Standard/ VIP / Corporate / Event / Influencer): ";
@@ -415,28 +426,49 @@ void Menu::displayAnalyticsMenu(Hotel& hotel) {
                 if (type == "VIP") {
                     Report<VIPGuest> report;
                     report.generate(hotel.getAllBookings());
+                    if (auto strat = hotel.getProfitStrategy()) {
+                        double profit = calculateProfitForType<VIPGuest>(hotel.getAllBookings(), *strat);
+                        std::cout << "Total profit from VIP guests: $" << profit << "\n";
+                    }
                 } else if (type == "Corporate") {
                     Report<CorporateGuest> report;
                     report.generate(hotel.getAllBookings());
+                    if (auto strat = hotel.getProfitStrategy()) {
+                        double profit = calculateProfitForType<CorporateGuest>(hotel.getAllBookings(), *strat);
+                        std::cout << "Total profit from Corporate guests: $" << profit << "\n";
+                    }
                 } else if (type == "Event") {
                     Report<EventGuest> report;
-                    report.generate(hotel.getAllBookings());
+                    report.generate(hotel.getAllBookings());if (auto strat = hotel.getProfitStrategy()) {
+                        double profit = calculateProfitForType<EventGuest>(hotel.getAllBookings(), *strat);
+                        std::cout << "Total profit from Event guests: $" << profit << "\n";
+                    }
                 } else if (type == "Influencer") {
                     Report<InfluencerGuest> report;
                     report.generate(hotel.getAllBookings());
+                    if (auto strat = hotel.getProfitStrategy()) {
+                        double profit = calculateProfitForType<InfluencerGuest>(hotel.getAllBookings(), *strat);
+                        std::cout << "Total profit from Influencer guests: $" << profit << "\n";
+                    }
                 } else if (type == "Standard") {
                     int count = 0;
-                    std::cout << "\n--- Report for selected guest type ---\n";
-                    for (const auto& b : hotel.getAllBookings()) {
-                        auto g = b.getGuest();
-                        if (!std::dynamic_pointer_cast<VIPGuest>(g) &&
-                            !std::dynamic_pointer_cast<CorporateGuest>(g) &&
-                            !std::dynamic_pointer_cast<EventGuest>(g) &&
-                            !std::dynamic_pointer_cast<InfluencerGuest>(g)) {
+                    double total = 0.0;
+
+                    if (auto strat = hotel.getProfitStrategy()) {
+                        for (const auto& b : hotel.getAllBookings()) {
+                            auto g = b.getGuest();
+                            if (!std::dynamic_pointer_cast<VIPGuest>(g) &&
+                                !std::dynamic_pointer_cast<CorporateGuest>(g) &&
+                                !std::dynamic_pointer_cast<EventGuest>(g) &&
+                                !std::dynamic_pointer_cast<InfluencerGuest>(g)) {
                                 ++count;
-                            }
+                                total += strat->computeProfit(b);
+                                }
+                        }
+                        std::cout << "\n--- Report for Standard guests ---\n";
+                        std::cout << "Total guests of selected type: " << count << "\n";
+                        std::cout << "Total profit from Standard guests: $" << total << "\n";
                     }
-                    std::cout << "Total guests of selected type: " << count << "\n";
                 } else {
                     std::cout << "Unknown type.\n";
                 }

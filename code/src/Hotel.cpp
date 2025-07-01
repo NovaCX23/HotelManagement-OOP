@@ -4,6 +4,10 @@
 #include <set>
 #include <sstream>
 
+Hotel::Hotel() {
+    profitStrategy = std::make_shared<RealisticProfitStrategy>();
+}
+
 bool compareByCheckIn(const Booking& first, const Booking& second) {
     return first.getCheckIn() < second.getCheckIn();
 }
@@ -33,13 +37,22 @@ bool Hotel::cancelBooking(int roomNumber) {
             if (i->getRoom().getNumber() == roomNumber && i->getCheckIn() == targetDate) {
                 std::cout << "Booking found:\n";
                 std::cout << *i << "\n";
-                std::cout << "Are you sure you want to cancel it? (y/n): ";
+                double pricePerNight = i->getRoom().getPrice();
+                int nights = i->getNights();
+                double totalPrice = pricePerNight * nights;
+                double cancelCost = 0.3 * totalPrice;
+
+                std::cout << "Are you sure you want to cancel this booking? ";
+                std::cout << "It will cost a cancellation fee of $" << cancelCost << " (30% of total price).\n";
+                std::cout << "(y/n): ";
 
                 char confirm;
                 std::cin >> confirm;
                 if (confirm == 'y' || confirm == 'Y') {
+                    addCancellationProfit(cancelCost);
                     bookings.erase(i);
                     std::cout << "Booking successfully cancelled.\n";
+                    std::cout << "Cancellation fee of $" << cancelCost << " added to hotel profit.\n";
                     return true;
                 } else {
                     std::cout << "Operation aborted.\n";
@@ -232,15 +245,43 @@ std::shared_ptr<ProfitStrategy> Hotel::getProfitStrategy() const {
     return profitStrategy;
 }
 
-
-double Hotel::getTotalProfit() const {
+double Hotel::getBookingProfit() const {
     if (!profitStrategy) return 0.0;
-
     double total = 0.0;
-    for (const auto& booking : bookings) {
-        total += profitStrategy->computeProfit(booking);
+    for (const auto& b : bookings) {
+        total += profitStrategy->computeProfit(b);
     }
     return total;
+}
+
+double Hotel::getGrossBookingProfit() const {
+    double total = 0.0;
+    for (const auto& b : bookings) {
+        total += b.getBookingPrice();  // fara pierderi
+    }
+    return total;
+}
+
+double Hotel::getTotalProfit() const {
+    return getBookingProfit() + vipUpgradeProfit + cancellationProfit;
+}
+
+
+void Hotel::addVIPProfit(double amount) {
+    vipUpgradeProfit += amount;
+}
+
+void Hotel::addCancellationProfit(double amount) {
+    cancellationProfit += amount;
+}
+
+
+double Hotel::getVIPProfit() const {
+    return vipUpgradeProfit;
+}
+
+double Hotel::getCancellationProfit() const {
+    return cancellationProfit;
 }
 
 
@@ -300,6 +341,19 @@ void Hotel::loadBookingsFromCSV(const std::string& filename) {
         try {
             Booking b = Booking::fromCSV(line, rooms);
             bookings.push_back(b);
+
+            // Verif vip-urile pentru a aduna profitul
+            auto vipPtr = std::dynamic_pointer_cast<VIPGuest>(b.getGuest());
+            if (vipPtr) {
+                std::string tier = vipPtr->getType();
+                if (tier.find("Gold") != std::string::npos) {
+                    addVIPProfit(4000.0);
+                } else if (tier.find("Silver") != std::string::npos) {
+                    addVIPProfit(2000.0);
+                } else if (tier.find("Bronze") != std::string::npos) {
+                    addVIPProfit(1000.0);
+                }
+            }
         }
         catch (const std::exception& e) {
             std::cerr << "Error reading booking, skipping line. Reason: " << e.what() << "\n";

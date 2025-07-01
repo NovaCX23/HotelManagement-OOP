@@ -30,7 +30,7 @@ int Booking::getNights() const { return nights; }
 
 
 // Functions
-double Booking::getTotalPrice() const {
+double Booking::getBookingPrice() const {
     double basePrice = room.getPrice() * nights;
     double discount = guest->guestDiscount(nights);
     return basePrice * (1.0 - discount);
@@ -128,7 +128,7 @@ std::ostream& operator<<(std::ostream& os, const Booking& booking) {
        << ", Category: " << booking.room.getType()
        << ", Check-in: " << booking.checkIn
        << ", Checkout: " << booking.getCheckout()
-       << ", Total Price: $" << booking.getTotalPrice()
+       << ", Total Price: $" << booking.getBookingPrice()
        << "]";
     return os;
 }

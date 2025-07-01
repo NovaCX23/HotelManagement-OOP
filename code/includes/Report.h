@@ -2,6 +2,7 @@
 #define REPORT_H
 
 #include "Booking.h"
+#include "ProfitStrategy.h"
 #include <memory>
 #include <iostream>
 
@@ -23,5 +24,16 @@ public:
 		std::cout << "Total guests of selected type: " << count << "\n";
 	}
 };
+
+template <typename T>
+double calculateProfitForType(const std::vector<Booking>& bookings, const ProfitStrategy& strategy) {
+	double total = 0.0;
+	for (const auto& b : bookings) {
+		if (std::dynamic_pointer_cast<T>(b.getGuest())) {
+			total += strategy.computeProfit(b);
+		}
+	}
+	return total;
+}
 
 #endif // REPORT_H

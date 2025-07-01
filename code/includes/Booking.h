@@ -25,7 +25,7 @@ public:
     static int getTotalBookings() { return totalBookings; }
 
     // Public Functions
-    [[nodiscard]] double getTotalPrice() const;
+    [[nodiscard]] double getBookingPrice() const;
     [[nodiscard]] std::string getCheckout() const;
     static std::string calculateCheckout(const std::string& checkIn, int nights);
 

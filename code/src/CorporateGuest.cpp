@@ -35,6 +35,7 @@ std::map<std::string, double> CorporateGuest::getAvailableBenefits() const {
         all.erase(benefit);
     }
     all["Conference room"] = 0.0;
+    all["Lounge access"] = 0.0;
     return all;
 }
 

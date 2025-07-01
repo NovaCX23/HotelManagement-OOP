@@ -37,3 +37,6 @@ int main() {
 //  niste booking uri o sa le dea clear ,
 //   Alta chestie e sa modific ceva ca sa se reflecte real modificarile facute pe bookings.csv
 //   Implementare reala pentru posibilitatea de a cumpara servicii extra
+
+
+// TODO: momentan adaug costul de vip de fiecare data , chiar daca se repeta clientul
