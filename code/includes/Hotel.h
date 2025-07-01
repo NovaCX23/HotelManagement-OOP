@@ -47,7 +47,6 @@ public:
     Room* findRoomByType(const std::string& type);
 
     // Profit
-    void setProfitStrategy(std::shared_ptr<ProfitStrategy> strategy);
     std::shared_ptr<ProfitStrategy> getProfitStrategy() const;
     double getBookingProfit() const;
     double getGrossBookingProfit() const;

@@ -426,29 +426,48 @@ void Menu::displayAnalyticsMenu(Hotel& hotel) {
                 if (type == "VIP") {
                     Report<VIPGuest> report;
                     report.generate(hotel.getAllBookings());
+
                     if (auto strat = hotel.getProfitStrategy()) {
                         double profit = calculateProfitForType<VIPGuest>(hotel.getAllBookings(), *strat);
-                        std::cout << "Total profit from VIP guests: $" << profit << "\n";
+                        double loss = calculateLossForType<VIPGuest>(hotel.getAllBookings());
+
+                        std::cout << "Total profit from bookings: $" << profit << "\n";
+                        std::cout << "Total loss from free benefits: -$" << loss << "\n";
+                        std::cout << "Extra VIP upgrade profit: +$" << hotel.getVIPProfit() << "\n";
+                        std::cout << "Total profit including VIP upgrades: $" << (profit + hotel.getVIPProfit()) << "\n";
                     }
                 } else if (type == "Corporate") {
                     Report<CorporateGuest> report;
                     report.generate(hotel.getAllBookings());
+
                     if (auto strat = hotel.getProfitStrategy()) {
                         double profit = calculateProfitForType<CorporateGuest>(hotel.getAllBookings(), *strat);
-                        std::cout << "Total profit from Corporate guests: $" << profit << "\n";
+                        double loss = calculateLossForType<CorporateGuest>(hotel.getAllBookings());
+
+                        std::cout << "Total profit from bookings: $" << profit << "\n";
+                        std::cout << "Total loss from free benefits: -$" << loss << "\n";
                     }
                 } else if (type == "Event") {
                     Report<EventGuest> report;
-                    report.generate(hotel.getAllBookings());if (auto strat = hotel.getProfitStrategy()) {
+                    report.generate(hotel.getAllBookings());
+
+                    if (auto strat = hotel.getProfitStrategy()) {
                         double profit = calculateProfitForType<EventGuest>(hotel.getAllBookings(), *strat);
-                        std::cout << "Total profit from Event guests: $" << profit << "\n";
+                        double loss = calculateLossForType<EventGuest>(hotel.getAllBookings());
+
+                        std::cout << "Total profit from bookings: $" << profit << "\n";
+                        std::cout << "Total loss from free benefits: -$" << loss << "\n";
                     }
                 } else if (type == "Influencer") {
                     Report<InfluencerGuest> report;
                     report.generate(hotel.getAllBookings());
+
                     if (auto strat = hotel.getProfitStrategy()) {
                         double profit = calculateProfitForType<InfluencerGuest>(hotel.getAllBookings(), *strat);
-                        std::cout << "Total profit from Influencer guests: $" << profit << "\n";
+                        double loss = calculateLossForType<InfluencerGuest>(hotel.getAllBookings());
+
+                        std::cout << "Total profit from bookings: $" << profit << "\n";
+                        std::cout << "Total loss from free benefits: -$" << loss << "\n";
                     }
                 } else if (type == "Standard") {
                     int count = 0;

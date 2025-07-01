@@ -237,9 +237,6 @@ Room* Hotel::findRoomByType(const std::string& type) {
 }
 
 // Profit
-void Hotel::setProfitStrategy(std::shared_ptr<ProfitStrategy> strategy) {
-    profitStrategy = std::move(strategy);
-}
 
 std::shared_ptr<ProfitStrategy> Hotel::getProfitStrategy() const {
     return profitStrategy;

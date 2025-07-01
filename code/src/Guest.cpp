@@ -61,7 +61,7 @@ double Guest::guestDiscount(int nights) const {
     return (nights >= 5) ? 0.05 : 0.0;
 }
 
-std::map<std::string, double> Guest::getAvailableBenefits() const {
+std::map<std::string, double> Guest::getStandardBenefitPrices() {
     return {
             {"Lounge access", 30.0},
             {"Spa access", 50.0},
@@ -73,8 +73,17 @@ std::map<std::string, double> Guest::getAvailableBenefits() const {
             {"Free airport transfer", 40.0},
             {"Laundry service", 10.0},
             {"Welcome gift", 10.0},
-            {"Free cancellation", 15.0}
+            {"Free cancellation", 15.0},
+            {"Event hall access", 200.0},
+            {"Special decor setup", 150.0},
+            {"Sound & lighting system", 180.0}
     };
+}
+
+
+
+std::map<std::string, double> Guest::getAvailableBenefits() const {
+    return getStandardBenefitPrices();
 }
 
 

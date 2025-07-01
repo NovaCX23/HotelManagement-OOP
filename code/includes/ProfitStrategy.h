@@ -2,6 +2,7 @@
 #define PROFITSTRATEGY_H
 
 #include "Booking.h"
+#include "CorporateGuest.h"
 #include <memory>
 
 class ProfitStrategy {
@@ -15,19 +16,19 @@ public:
 	double computeProfit(const Booking& booking) const override {
 		double total = booking.getBookingPrice();
 
-		// Pierderi din beneficii incluse
 		auto guest = booking.getGuest();
+		auto guestBenefits = guest->getAvailableBenefits();
+
+		// Preturile standard
+		auto standardPrices = Guest::getStandardBenefitPrices();
+
 		double loss = 0.0;
-
-		auto free = guest->getFreeBenefits();
-		auto all = guest->getAvailableBenefits();
-
-		for (const auto& benefit : free) {
-			if (all.contains(benefit)) {
-				loss += all[benefit];
+		for (const auto& [benefitName, standardPrice] : standardPrices) {
+			auto it = guestBenefits.find(benefitName);
+			if (it != guestBenefits.end() && it->second == 0.0) {
+				loss += standardPrice;  // beneficiu oferit gratuit → pierdere
 			}
 		}
-
 		return total - loss;
 	}
 

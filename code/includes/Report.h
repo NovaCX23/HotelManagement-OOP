@@ -36,4 +36,26 @@ double calculateProfitForType(const std::vector<Booking>& bookings, const Profit
 	return total;
 }
 
+template <typename T>
+double calculateLossForType(const std::vector<Booking>& bookings) {
+	double totalLoss = 0.0;
+
+	auto standardPrices = Guest::getStandardBenefitPrices();
+
+	for (const auto& b : bookings) {
+		auto guestPtr = std::dynamic_pointer_cast<T>(b.getGuest());
+		if (guestPtr) {
+			auto guestBenefits = guestPtr->getAvailableBenefits();
+			for (const auto& [benefitName, standardPrice] : standardPrices) {
+				auto it = guestBenefits.find(benefitName);
+				if (it != guestBenefits.end() && it->second == 0.0) {
+					totalLoss += standardPrice;
+				}
+			}
+		}
+	}
+	return totalLoss;
+}
+
+
 #endif // REPORT_H

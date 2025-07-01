@@ -37,6 +37,7 @@ public:
 
     // functions
     void displayBenefits() const;
+    static std::map<std::string, double> getStandardBenefitPrices();
 
 
     // Operators

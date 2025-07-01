@@ -31,11 +31,11 @@ std::vector<std::string> CorporateGuest::excludedBenefits() const {
 
 std::map<std::string, double> CorporateGuest::getAvailableBenefits() const {
     auto all = Guest::getAvailableBenefits();
+    all["Conference room"] = 0.0;
+    all["Lounge access"] = 0.0;
     for (const auto& benefit : excludedBenefits()) {
         all.erase(benefit);
     }
-    all["Conference room"] = 0.0;
-    all["Lounge access"] = 0.0;
     return all;
 }
 
