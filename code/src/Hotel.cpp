@@ -4,9 +4,7 @@
 #include <set>
 #include <sstream>
 
-Hotel::Hotel() {
-    profitStrategy = std::make_shared<RealisticProfitStrategy>();
-}
+Hotel::Hotel() : profitStrategy(std::make_shared<RealisticProfitStrategy>()) {}
 
 bool compareByCheckIn(const Booking& first, const Booking& second) {
     return first.getCheckIn() < second.getCheckIn();

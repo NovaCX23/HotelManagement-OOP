@@ -20,7 +20,7 @@ public:
     static void RunInteractiveMenu(Hotel& hotel);
     static void displayBookingsMenu(Hotel& hotel);
     static void displayGuestsMenu(const Hotel& hotel);
-    static void displayAnalyticsMenu(Hotel& hotel);
+    static void displayAnalyticsMenu(const Hotel& hotel);
 };
 
 #endif //MENU_H

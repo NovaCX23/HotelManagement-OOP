@@ -384,7 +384,7 @@ void Menu::displayGuestsMenu(const Hotel& hotel) {
 }
 
 
-void Menu::displayAnalyticsMenu(Hotel& hotel) {
+void Menu::displayAnalyticsMenu(const Hotel& hotel) {
     while (true) {
         std::cout << "\n--- Hotel Analytics ---\n";
         std::cout << "1. Show Total Profit Report\n";
@@ -470,10 +470,9 @@ void Menu::displayAnalyticsMenu(Hotel& hotel) {
                         std::cout << "Total loss from free benefits: -$" << loss << "\n";
                     }
                 } else if (type == "Standard") {
-                    int count = 0;
-                    double total = 0.0;
-
                     if (auto strat = hotel.getProfitStrategy()) {
+                        int count = 0;
+                        double total = 0.0;
                         for (const auto& b : hotel.getAllBookings()) {
                             auto g = b.getGuest();
                             if (!std::dynamic_pointer_cast<VIPGuest>(g) &&

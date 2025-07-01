@@ -33,7 +33,9 @@ int Booking::getNights() const { return nights; }
 double Booking::getBookingPrice() const {
     double basePrice = room.getPrice() * nights;
     double discount = guest->guestDiscount(nights);
-    return basePrice * (1.0 - discount);
+    double totalPrice = basePrice * (1.0 - discount);
+
+    return totalPrice;
 }
 
 std::string Booking::calculateCheckout(const std::string& checkIn, int nights) {
